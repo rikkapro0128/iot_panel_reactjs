@@ -6,14 +6,16 @@ import App from './app';
 import 'rsuite/dist/rsuite.min.css';
 import './index.css';
 import Theme from './theme';
+import { Toaster } from 'react-hot-toast';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Theme>
       <App />
-    </Theme>
-  </React.StrictMode>
+      <Toaster />
+    </Theme>,
+  //{/* </React.StrictMode> */}
 );
 
 // If you want to start measuring performance in your app, pass a function
