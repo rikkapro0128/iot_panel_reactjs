@@ -9,6 +9,12 @@ module.exports = {
       backgroundImage: {
         "hero-pattern": "url('assets/images/hero-img.svg')",
       },
+      keyframes: {
+        'miru-breathing': {
+          '0%': { 'transform': 'translate(5px, 5px)' },
+          '100%': { 'transform': 'translate(-5px, -5px)' },
+        }
+      }
     },
   },
 };
