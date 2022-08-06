@@ -7,7 +7,7 @@ import {
 import HomePage from "@/page";
 import Login from "@/page/login"; 
 import Register from "@/page/register"; 
-import { Auth } from '@/auth/index.js';
+import { Auth } from '@/auth';
 
 function App () {
   return (
