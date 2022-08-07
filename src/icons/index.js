@@ -130,6 +130,67 @@ const IconCheck = (props) => (
   </svg>
 )
 
+const IconBell = (props) => (
+  <svg
+    width={24}
+    height={24}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M14 3v.29c2.892.86 5 3.539 5 6.71v7h1v2H4v-2h1v-7a7.003 7.003 0 0 1 5-6.71V3a2 2 0 1 1 4 0ZM7 17h10v-7a5 5 0 0 0-10 0v7Zm7 4v-1h-4v1a2 2 0 1 0 4 0Z"
+      fill="currentColor"
+    />
+  </svg>
+)
+
+const IconNode = (props) => (
+  <svg
+    width={24}
+    height={24}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M5 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM12 5a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM17 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM20 5a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM5 20a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 20a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM12 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM17 20a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM20 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM5 12a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM20 13a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M0 9a3 3 0 0 1 3-3h18a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V9Zm3-1h18a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"
+      fill="currentColor"
+    />
+  </svg>
+)
+
+const IconAdd = (props) => (
+  <svg
+    {...props}
+    width={24}
+    height={24}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm10-8a8 8 0 1 0 0 16 8 8 0 0 0 0-16Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M13 7a1 1 0 1 0-2 0v4H7a1 1 0 1 0 0 2h4v4a1 1 0 1 0 2 0v-4h4a1 1 0 1 0 0-2h-4V7Z"
+      fill="currentColor"
+    />
+  </svg>
+)
+
 export {
   IconGithub,
   IconGoogle,
@@ -137,4 +198,7 @@ export {
   IconUndo,
   IconSign,
   IconCheck,
+  IconBell,
+  IconNode,
+  IconAdd,
 }

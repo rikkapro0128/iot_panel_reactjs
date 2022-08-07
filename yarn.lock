@@ -7366,6 +7366,11 @@ react-cookie@^4.1.1:
     hoist-non-react-statics "^3.0.0"
     universal-cookie "^4.0.0"
 
+react-customizable-progressbar@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-customizable-progressbar/-/react-customizable-progressbar-1.1.0.tgz#eb4c3ad8350a031a570827a1dece222c44c91ce2"
+  integrity sha512-VkHRAJjrNrknZqrpJTGJ2mXMuj1+91SpP/2YpEV+YLzAJEl6hK2DmUygbtTmo80tsY8eHIAXjQEKtxgML0EWBw==
+
 react-dev-utils@^12.0.1:
   version "12.0.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-12.0.1.tgz#ba92edb4a1f379bd46ccd6bcd4e7bc398df33e73"

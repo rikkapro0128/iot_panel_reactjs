@@ -5,10 +5,10 @@ function HomePage() {
   const navigate = useNavigate();
   return (
     <div>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 mt-4">
         {/* Navbar */}
-        <div className="flex items-center justify-between mt-4">
-          <Logo className='' />
+        <div className="flex items-center justify-between">
+          <Logo />
           {/* Menu list */}
           <div className="flex space-x-6">
             <div className="text-sky-500 cursor-pointer hover:text-sky-400">Tổng quan</div>
