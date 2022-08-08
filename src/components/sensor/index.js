@@ -23,22 +23,24 @@ export function SensorDefault(props) {
   }, [props.value])
 
   return (
-    <div style={{ width: `${props.size}px`, height: `${props.size}px` }}>
-      <ProgressBar
-        { ...props }
-        progress={percentProgress}
-        radius={100}
-        strokeWidth={18}
-        strokeColor={`hsl(${color.h}, ${color.s}%, ${color.l}%)`}
-        strokeLinecap="round"
-        trackStrokeWidth={18}
-        counterClockwise
-      >
-        <div className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
-          <div className="lg:text-3xl md:text-base md:font-bold	 text-center">{props.value}{props.unit}</div>
-          <div className="text-md text-center">{props.title}</div>
-        </div>
-      </ProgressBar>
+    <div className="bg-[#292d33] rounded p-2.5">
+      <p className="text-lg text-center">{props.title}</p>
+      <div className='m-auto' style={{ width: `${props.size}px`, height: `${props.size}px` }}>
+        <ProgressBar
+          { ...props }
+          progress={percentProgress}
+          radius={100}
+          strokeWidth={18}
+          strokeColor={`hsl(${color.h}, ${color.s}%, ${color.l}%)`}
+          strokeLinecap="round"
+          trackStrokeWidth={18}
+          counterClockwise
+        >
+          <div className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
+            <div className="lg:text-3xl md:text-2xl md:font-bold	 text-center">{props.value}{props.unit}</div>
+          </div>
+        </ProgressBar>
+      </div>
     </div>
   );
 }
