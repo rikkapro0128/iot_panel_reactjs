@@ -2,7 +2,7 @@ import { Form, Button, Panel, FlexboxGrid } from "rsuite";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
-import toast from "react-hot-toast";
+import { Toast } from '@/instance/toast.js'
 
 import api from "@/api/index.js";
 import { IconUndo, IconSign } from "@/icons";
@@ -17,35 +17,20 @@ function Register() {
   function resgisterAccount() {
     try {
       const request = api.post(pathRegisterAccount, form);
-      toast.promise(
-        request,
-        {
+      Toast({
+        type: 'promise', 
+        promise: request,
+        payloadMessage: {
           loading: "Đang tạo tài khoản!",
           success: (response) => {
-            setCookie("accessToken", response.data.accessToken);
-            setCookie("refreshToken", response.data.refreshToken);
+            setCookie("accessToken", response.data.accessToken, { path: '/' });
+            setCookie("refreshToken", response.data.refreshToken, { path: '/' });
             navigate(`/`);
             return "Bạn đã tạo tài khoản thành công👻";
           },
           error: "Không thể tạo tài khoản!",
-        },
-        {
-          success: {
-            duration: 5000,
-            icon: "👌",
-          },
-          error: {
-            duration: 2000,
-            icon: "🐧",
-          },
-          position: "bottom-right",
-          style: {
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
-          },
         }
-      );
+      });
     } catch (error) {
       console.log(error);
     }
