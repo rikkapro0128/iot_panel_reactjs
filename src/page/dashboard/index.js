@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import { Loader } from "rsuite";
+import { useDispatch, useSelector } from 'react-redux';
+import { setNodes } from '@/store/nodeSlice';
 
 import { Logo } from '@/components/logo';
 import { Node } from '@/components/node';
@@ -11,16 +13,19 @@ import api from '@/api/index.js';
 const getListNode = 'api/node/list';
 
 function Dashboard() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [parentPath, setParentPath] = useState('/dashboard');
   const [statusNode, setStatusNode] = useState('disconnected');
-  const [nodeList, setNodelist] = useState([]);
+  const nodeList = useSelector((state) => state.nodes.value);
   const [toggle, setToggle] = useState(false);
+  
+  console.log(nodeList);
 
   useEffect(() => {
     api.get(getListNode).then((res) => {
-      setNodelist(res.data.node_list);
+      dispatch(setNodes(res.data.node_list));
       setIsLoading(false);
     })
   }, [])
@@ -39,7 +44,7 @@ function Dashboard() {
           <div className="lg:col-span-3 md:col-span-3 sm:block hidden mr-4">
             <Logo onClick={() => { navigate(`/`) }} />
             <div className="mt-5 bg-[#292d33] py-2.5 rounded-lg">
-              {nodeList.map(({ path, name }, index) => {
+              {/* {nodeList.map(({ path, name }, index) => {
                 return (
                   <div key={path} onClick={() => { navigate(`${parentPath}/${path}`) }} className={`cursor-pointer hover:text-slate-300 flex items-center justify-center relative ${ index > 0 ? `before:content-[''] before:absolute before:w-4/5 before:h-px before:bg-white before:top-[-1px]` : '' }`}>
                     <IconNode />
@@ -48,7 +53,7 @@ function Dashboard() {
                     </p>
                   </div>
                 );
-              })}
+              })} */}
               <div onClick={() => { navigate('/dashboard') }} className="cursor-pointer hover:text-slate-300 flex items-center justify-center relative">
                 <IconAdd />
                 <p className="text-inherit p-3.5 ">
@@ -81,13 +86,13 @@ function Dashboard() {
                 return <Route key={node.path} path={`${node.path}`} element={<Node node-payload={node} modifyStatus={(status) => { setStatusNode(status) }} />} />;
               })}
             </Routes> */}
-            { nodeList.length 
+            {/* { nodeList.length 
               ? <div>
                 </div>
               : <div>
                   <p>bạn chưa có node nào</p>
                 </div>
-            }
+            } */}
           </div>
         </div>
       )}

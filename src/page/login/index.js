@@ -42,12 +42,18 @@ function Login() {
     });
   }
 
+  function hanldeKeyUp(event) {
+    if(event.key === 'Enter') {
+      loginAccount();
+    }
+  }
+
   return (
     <div className='h-screen flex justify-center items-center'>
       <FlexboxGrid.Item className='max-w-md' colspan={12}>
       <div >
       <Panel className='mb-2.5' header={<h3 className='text-center text-3xl'>Đăng nhập</h3>} bordered>
-        <Form fluid onChange={ (dataForm) => { setForm(dataForm) } }>
+        <Form fluid onKeyUp={ hanldeKeyUp } onChange={ (dataForm) => { setForm(dataForm) } }>
           <Form.Group>
             <Form.ControlLabel>Tên đăng nhập</Form.ControlLabel>
             <Form.Control name="name" />

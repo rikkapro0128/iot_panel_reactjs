@@ -3,6 +3,7 @@ import axios from "axios";
 import Cookies from 'universal-cookie';
 import jwt_decode from "jwt-decode";
 import { Toast } from '@/instance/toast.js';
+import history from "@/instance/history.js";
 
 const cookies = new Cookies();
 
@@ -28,18 +29,22 @@ instance.interceptors.request.use(function (config) {
 
 instance.interceptors.response.use(
   (response) => {
-    Toast({ type: 'success', message: 'not message!' });
     return response;
   },
   async (error) => {
     const originalRequest = error.config;
     const errorMessage = error.response.data.message;
     if(errorMessage === 'not found header authorization!' || errorMessage === 'token is expire!') {
-      await refreshAccessToken();
-      return instance(originalRequest);
-    }else {
-      return Promise.reject(error);
+      const statusResfresh = await refreshAccessToken();
+      if(statusResfresh) {
+        return instance(originalRequest);
+      }else {
+        // navigate to login
+        Toast({ type: 'error', message: 'Phiên đăng nhập đã hết bạn đăng nhập lại nhé!' });
+        history.push('/sign/login');
+      }
     }
+    return Promise.reject(error);
   }
 )
 
@@ -51,13 +56,13 @@ async function refreshAccessToken() {
       const res = await instance.get(pathRefreshToken, { headers: { 'ref-token': refreshToken } });
       const payloadAccessToken = jwt_decode(res.data.token);
       cookies.set("accessToken", res.data.token, { path: '/', expires: new Date(payloadAccessToken.exp * 1000) });
+      return true;
     }else {
-      // navigate to login
-      location.href = '/sign/login';
+      return false;
     }
   } catch (error) {
-    location.href = '/sign/login';
     console.log(error);
+    return false;
   }
 }
 

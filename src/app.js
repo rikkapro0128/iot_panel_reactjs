@@ -1,8 +1,9 @@
 import {
-  BrowserRouter,
+  unstable_HistoryRouter as HistoryRouter,
   Routes,
   Route,
 } from "react-router-dom";
+import history from '@/instance/history.js';
 
 import HomePage from "@/page";
 import Login from "@/page/login"; 
@@ -13,7 +14,7 @@ import { Auth, Protect } from '@/auth';
 function App () {
 
   return (
-    <BrowserRouter>
+    <HistoryRouter history={history}>
       <Routes>
         <Route path="/" element={<HomePage />}></Route>
         <Route path="/dashboard/*" element={
@@ -26,7 +27,7 @@ function App () {
           <Route path="register" element={<Register />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HistoryRouter>
   )
 
 }

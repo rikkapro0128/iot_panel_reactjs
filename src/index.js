@@ -7,14 +7,18 @@ import 'rsuite/dist/rsuite.min.css';
 import './index.css';
 import Theme from './theme';
 import { Toaster } from 'react-hot-toast';
+import { Provider } from 'react-redux';
+import { store } from '@/store/index.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
+  <Provider store={store}>
     <Theme>
       <App />
       <Toaster />
-    </Theme>,
+    </Theme>
+  </Provider>
   //{/* </React.StrictMode> */}
 );
 

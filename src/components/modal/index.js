@@ -20,8 +20,8 @@ const nodeExample = [
 
 function ModalInput(props) {
 
-  const [nodeName, setNodeName] = useState('');
-  const [modalNode, setModalNode] = useState('esp8266');
+  const [nameNode, setNameNode] = useState('');
+  const [nodeModal, setNodeModal] = useState('esp8266');
 
   function handleEnterModel(event) {
     if(event.key === 'Enter') {
@@ -30,16 +30,18 @@ function ModalInput(props) {
   }
 
   async function handleCompleteData() {
-    if(!nodeName) {
+    if(!nameNode) {
       Toast({ type: 'error', message: 'Bạn phải nhập tên node!' });
       return;
     }
-    if(!modalNode) {
+    if(!nodeModal) {
       Toast({ type: 'error', message: 'Bạn phải chọn node modal!' });
       return;
     }
-    const res = await api.post('api/node/create');
-    console.log(res);
+    const res = await api.post('api/node/create', { nameNode, nodeModal });
+    if(res.data.message === "create node successfull!") {
+
+    }
   }
   
   return (
@@ -48,8 +50,8 @@ function ModalInput(props) {
           <Modal.Title>Tạo Node Control</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Input onChange={(name) => { setNodeName(name) }} name="node-name" placeholder="Tên Node MCU" />
-          <InputPicker onChange={(nodeModal) => { setModalNode(nodeModal) }} defaultValue={'esp8266'} disabledItemValues={['esp32', 'arduino-wifi']} className='w-full mt-2.5' placeholder='Chọn model' data={nodeExample} />
+          <Input onChange={(name) => { setNameNode(name) }} name="node-name" placeholder="Tên Node MCU" />
+          <InputPicker onChange={(nodeModal) => { setNodeModal(nodeModal) }} defaultValue={'esp8266'} disabledItemValues={['esp32', 'arduino-wifi']} className='w-full mt-2.5' placeholder='Chọn model' data={nodeExample} />
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={handleCompleteData} className='px-5' appearance="primary">
