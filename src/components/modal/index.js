@@ -1,5 +1,7 @@
-import { Modal, Button, Input, InputPicker, } from 'rsuite';
+import { Modal, Button, Input, InputPicker } from 'rsuite';
 import { useState, useEffect } from 'react';
+import { useDispatch } from "react-redux";
+import { addNode } from "@/store/nodeSlice";
 import { Toast } from '@/instance/toast.js';
 import api from '@/api/index.js';
 
@@ -20,6 +22,7 @@ const nodeExample = [
 
 function ModalInput(props) {
 
+  const dispatch = useDispatch();
   const [nameNode, setNameNode] = useState('');
   const [nodeModal, setNodeModal] = useState('esp8266');
 
@@ -38,9 +41,16 @@ function ModalInput(props) {
       Toast({ type: 'error', message: 'Bạn phải chọn node modal!' });
       return;
     }
-    const res = await api.post('api/node/create', { nameNode, nodeModal });
-    if(res.data.message === "create node successfull!") {
-
+    try {
+      const res = await api.post('api/node/create', { nameNode, nodeModal });
+      if(res.data.message === "create node successfull!") {
+        Toast({ type: 'success', message: 'Đã tạo node thành công!' });
+        props.changeToggle();
+        dispatch(addNode(res.data.node));
+      }
+    } catch (error) {
+      console.log(error);
+      Toast({ type: 'error', message: 'Tạo node không thành công!' });
     }
   }
   

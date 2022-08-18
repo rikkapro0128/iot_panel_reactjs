@@ -191,14 +191,86 @@ const IconAdd = (props) => (
   </svg>
 )
 
+const IconMoreVertical = (props) => (
+  <svg
+    width={24}
+    height={24}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"
+      fill="currentColor"
+    />
+  </svg>
+)
+
+const IconOption = (props) => (
+  <svg
+    width={24}
+    height={24}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M7 3a4.002 4.002 0 0 1 3.874 3H19v2h-8.126A4.002 4.002 0 0 1 3 7a4 4 0 0 1 4-4Zm0 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 20a4.002 4.002 0 0 1-3.874-3H5v-2h8.126A4.002 4.002 0 0 1 21 16a4 4 0 0 1-4 4Zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"
+      fill="currentColor"
+    />
+  </svg>
+)
+
+const IconInfo = (props) => (
+  <svg
+    width={24}
+    height={24}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M11 10.98a1 1 0 1 1 2 0v6a1 1 0 1 1-2 0v-6ZM12 6.051a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2ZM4 12a8 8 0 1 0 16 0 8 8 0 0 0-16 0Z"
+      fill="currentColor"
+    />
+  </svg>
+)
+
+const IconPlayListRemove = (props) => (
+  <svg
+    width={24}
+    height={24}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M15.964 4.634h-12v2h12v-2ZM15.964 8.634h-12v2h12v-2ZM3.964 12.634h8v2h-8v-2ZM12.964 13.71l1.415-1.415 2.121 2.121 2.121-2.12 1.415 1.413-2.122 2.122 2.122 2.12-1.415 1.415-2.121-2.121-2.121 2.121-1.415-1.414 2.122-2.122-2.122-2.12Z"
+      fill="currentColor"
+    />
+  </svg>
+)
+
 export {
-  IconGithub,
-  IconGoogle,
-  IconFacebook,
+  IconAdd,
+  IconBell,
+  IconInfo,
   IconUndo,
   IconSign,
-  IconCheck,
-  IconBell,
   IconNode,
-  IconAdd,
+  IconCheck,
+  IconGithub,
+  IconGoogle,
+  IconOption,
+  IconFacebook,
+  IconMoreVertical,
+  IconPlayListRemove,
 }

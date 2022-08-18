@@ -15,7 +15,7 @@ export const nodesSlice = createSlice({
       state.value.push(action.payload);
     },
     removeNode: (state, action) => {
-      state.value = state.value.filter(node => node.id !== action.payload.id);
+      state.value = state.value.filter(node => node._id !== action.payload.id);
     }
   }
 });
