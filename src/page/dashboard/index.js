@@ -1,19 +1,19 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
-import { Checkbox, Whisper } from 'rsuite';
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import { Loader } from "rsuite";
 import { useDispatch, useSelector } from "react-redux";
-import { setNodes, removeNode } from "@/store/nodeSlice";
+import { setNodes } from "@/store/nodeSlice";
 
 import { Logo } from "@/components/logo";
 import { Node } from "@/components/node";
+import General from '@/components/general';
 import { ModalInput } from "@/components/modal";
-import { MenuPopover } from '@/components/popover';
-import { IconBell, IconNode, IconAdd, IconMoreVertical } from "@/icons";
+import { IconBell, IconNode, IconAdd, IconGeneral } from "@/icons";
 import api from "@/api/index.js";
 
 const getListNode_PATH = "api/node/list";
-const removeNodeByID_PATH = 'api/node/remove';
 
 function Dashboard() {
   const dispatch = useDispatch();
@@ -30,18 +30,6 @@ function Dashboard() {
       setIsLoading(false);
     });
   }, []);
-
-  function handleSelectMenu({ eventKey, actions, target }) {
-    if(eventKey === 'delete') {
-      api.delete(`${removeNodeByID_PATH}/${target.id}`).then(res => {
-        const { idNode, message } = res.data;
-        if(idNode && message === 'remove node successfull!') {
-          dispatch(removeNode({ id: idNode }));
-        }
-      });
-      actions.close();
-    } 
-  }
 
   return (
     <>
@@ -66,25 +54,25 @@ function Dashboard() {
               }}
             />
             <div className="mt-5 bg-[#292d33] py-2.5 rounded-lg">
-              {/* {nodeList.map(({ path, name }, index) => {
+              <div
+                onClick={() => {
+                  navigate("/dashboard/general");
+                }}
+                className="cursor-pointer hover:text-slate-300 flex items-center justify-center relative"
+              >
+                <IconGeneral fill="white" />
+                <p className="text-inherit p-3.5 ">Tổng quan</p>
+              </div>
+              {nodeList.map(({ _id, name }, index) => {
                 return (
-                  <div key={path} onClick={() => { navigate(`${parentPath}/${path}`) }} className={`cursor-pointer hover:text-slate-300 flex items-center justify-center relative ${ index > 0 ? `before:content-[''] before:absolute before:w-4/5 before:h-px before:bg-white before:top-[-1px]` : '' }`}>
+                  <div key={_id} onClick={() => { navigate(`${parentPath}/node/${_id}`) }} className={`cursor-pointer hover:text-slate-300 flex items-center justify-center relative`}>
                     <IconNode />
                     <p className="text-inherit text-center p-3.5" >
                       {name}
                     </p>
                   </div>
                 );
-              })} */}
-              <div
-                onClick={() => {
-                  navigate("/dashboard");
-                }}
-                className="cursor-pointer hover:text-slate-300 flex items-center justify-center relative"
-              >
-                <IconAdd />
-                <p className="text-inherit p-3.5 ">Tổng quan</p>
-              </div>
+              })}
               <div
                 onClick={() => {
                   setToggle(true);
@@ -92,7 +80,7 @@ function Dashboard() {
                 className="cursor-pointer hover:text-slate-300 flex items-center justify-center relative"
               >
                 <IconAdd />
-                <p className="text-inherit p-3.5 ">Add Node</p>
+                <p className="text-inherit p-3.5 ">Thêm Node</p>
               </div>
             </div>
           </div>
@@ -121,82 +109,14 @@ function Dashboard() {
                 </div>
               </div>
             </div>
-            {/* <Routes>
-              {nodeList.map(node => {
-                return <Route key={node.path} path={`${node.path}`} element={<Node node-payload={node} modifyStatus={(status) => { setStatusNode(status) }} />} />;
-              })}
-            </Routes> */}
-            <div className="w-full bg-[#1A1D27] shadow-lg rounded-md border border-gray-200 mt-3.5">
-              <header className="px-5 pt-4 border-b border-gray-100">
-                <div className="font-semibold text-white">Quản lí Node</div>
-              </header>
-
-              <div className="overflow-x-auto p-3">
-                <table className="table-auto w-full overflow-hidden rounded-md">
-                  <thead className="text-xs font-semibold uppercase text-gray-400 bg-[#1F2937]">
-                    <tr>
-                      <th className="p-2 text-left">
-                        <Checkbox />
-                      </th>
-                      <th className="p-2">
-                        <div className="font-semibold text-center">ID Node</div>
-                      </th>
-                      <th className="p-2">
-                        <div className="font-semibold  text-center">Tên Node</div>
-                      </th>
-                      <th className="p-2">
-                        <div className="font-semibold  text-center">Loại Modal</div>
-                      </th>
-                      <th className="p-2">
-                        <div className="font-semibold text-center">Cài đặt</div>
-                      </th>
-                    </tr>
-                  </thead>
-
-                  <tbody className="text-sm divide-y divide-gray-100">
-                    {
-                      nodeList.length > 0
-                        ? nodeList.map((node, index) => {
-                            return (
-                              <tr className={`p-2 ${index % 2 == 0 ? `bg-[#384152]` : `bg-[#1F2937]`}`} key={node._id}>
-                                <td className="p-2">
-                                  <Checkbox />
-                                </td>
-                                <td className="p-2">
-                                  <div className="font-medium text-slate-400">
-                                    {node._id}
-                                  </div>
-                                </td>
-                                <td className="p-2">
-                                  <div className="font-medium text-white">
-                                    {node.name}
-                                  </div>
-                                </td>
-                                <td className="p-2">
-                                  <div className="text-center text-xs bg-[#A6F4D0] p-1 rounded-full text-[#225945]">
-                                    {node.typeModal}
-                                  </div>
-                                </td>
-                                <td className="p-2">
-                                  <div className="flex justify-center relative">
-                                    <MenuPopover id={ node._id } target={ { id: node._id } } handleSelect={ handleSelectMenu }>
-                                      <IconMoreVertical className='cursor-pointer' />
-                                    </MenuPopover>
-                                  </div>
-                                </td>
-                              </tr>
-                            );
-                          })
-                      : <tr>
-                          <td colspan="5" className="text-center p-4 bg-[#384152]">
-                            Bạn chưa đăng ký node nào cả!
-                          </td>
-                        </tr>
-                    }
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            <Routes>
+              <Route path={`general`} element={<General nodeList={nodeList}/> }/>
+              {
+                nodeList.map(({ _id }) => {
+                  return <Route key={_id} path={`node/${_id}`} element={<Node node-id={_id} modifyStatus={(status) => { setStatusNode(status) }} />} />;
+                })
+              }
+            </Routes>
           </div>
         </div>
       )}

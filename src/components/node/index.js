@@ -1,11 +1,8 @@
-import { useEffect } from "react";
 import { SensorDefault } from '@/components/sensor';
 import { ButtonPush, Slider, ColorPicker } from '@/components/devices';
 
 function Node(props) {
-  useEffect(() => {
-    props.modifyStatus(props["node-payload"].status);
-  }, [props["node-payload"].path]);
+  
 
   return (
     <div className="grid md:grid-cols-3	lg:grid-cols-4 xl:grid-cols-5 gap-2 mt-2.5">

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Logo } from '@/components/logo';
 
 function HomePage() {
@@ -14,7 +14,7 @@ function HomePage() {
             <div className="text-sky-500 cursor-pointer hover:text-sky-400">Tổng quan</div>
             <div className="text-sky-500 cursor-pointer hover:text-sky-400">Sản phẩm</div>
             <div className="text-sky-500 cursor-pointer hover:text-sky-400">Về chúng tôi</div>
-            <div onClick={() => { navigate('/dashboard') }} className="text-sky-500 cursor-pointer hover:text-sky-400">Dashboard</div>
+            <div onClick={() => { navigate('/dashboard/general') }} className="text-sky-500 cursor-pointer hover:text-sky-400">Dashboard</div>
             <div onClick={() => { navigate('/sign/login') }} className="text-sky-500 cursor-pointer hover:text-sky-400">Đăng nhập</div>
           </div>
         </div>

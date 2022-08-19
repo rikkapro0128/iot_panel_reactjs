@@ -1,5 +1,5 @@
 import { Modal, Button, Input, InputPicker } from 'rsuite';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useDispatch } from "react-redux";
 import { addNode } from "@/store/nodeSlice";
 import { Toast } from '@/instance/toast.js';
@@ -47,6 +47,7 @@ function ModalInput(props) {
         Toast({ type: 'success', message: 'Đã tạo node thành công!' });
         props.changeToggle();
         dispatch(addNode(res.data.node));
+        setNameNode('');
       }
     } catch (error) {
       console.log(error);
