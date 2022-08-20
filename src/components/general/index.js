@@ -1,11 +1,28 @@
 import { useState, useEffect, useRef } from "react";
 import api from "@/api/index.js";
-import { MenuPopover } from '@/components/popover';
+import MenuPopover from '@/components/popover';
 import { useDispatch, useSelector } from "react-redux";
 import { removeNode } from "@/store/nodeSlice";
-import { IconMoreVertical } from "@/icons";
+import { IconMoreVertical, IconOption, IconPlayListRemove, IconInfo } from "@/icons";
 
 const removeNodeByID_PATH = 'api/node/remove';
+const dataDropDown = [
+  {
+    eventKey: 'settings',
+    name: 'Cài đặt',
+    Icon: IconOption,
+  },
+  {
+    eventKey: 'delete',
+    name: 'Xóa node',
+    Icon: IconPlayListRemove,
+  },
+  {
+    eventKey: 'about',
+    name: 'Thông tin node',
+    Icon: IconInfo,
+  },
+]
 
 function General({ nodeList }) {
 
@@ -82,7 +99,7 @@ function General({ nodeList }) {
   }
 
   return (
-    <div className="w-full bg-[#1A1D27] shadow-lg rounded-md border border-gray-200 mt-3.5">
+    <div className="w-full bg-[#1A1D27] shadow-lg rounded-md border border-gray-200">
       <header className="px-5 pt-4 border-b border-gray-100">
         <div className="font-semibold text-white">Quản lí Node</div>
       </header>
@@ -104,7 +121,7 @@ function General({ nodeList }) {
                 <div className="font-semibold  text-center">Loại Modal</div>
               </th>
               <th className="p-2">
-                <div className="font-semibold text-center">Cài đặt</div>
+                <div className="font-semibold text-center">chỉnh sửa</div>
               </th>
             </tr>
           </thead>
@@ -140,6 +157,7 @@ function General({ nodeList }) {
                             <MenuPopover
                               id={node._id}
                               target={{ id: node._id }}
+                              dataDropDown={dataDropDown}
                               handleSelect={handleSelectMenu}
                             >
                               <IconMoreVertical className="cursor-pointer" />

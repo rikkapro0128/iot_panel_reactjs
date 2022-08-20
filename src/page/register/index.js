@@ -1,4 +1,4 @@
-import { Form, Button, Panel, FlexboxGrid } from "rsuite";
+import { Form, Button, Panel } from "rsuite";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
@@ -37,8 +37,8 @@ function Register() {
   }
 
   return (
-    <div className="h-screen flex justify-center items-center">
-      <FlexboxGrid.Item className="max-w-md" colspan={12}>
+    <div className="h-screen flex justify-center items-center px-6">
+      <div className="mx-auto  w-[410px] min-w-[320px]">
         <Panel
           header={<h3 className="text-center text-3xl">Đăng ký</h3>}
           bordered
@@ -108,7 +108,7 @@ function Register() {
             </Form.Group>
           </Form>
         </Panel>
-      </FlexboxGrid.Item>
+      </div>
     </div>
   );
 }

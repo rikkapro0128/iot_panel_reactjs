@@ -1,40 +1,36 @@
 import { Popover, Dropdown, Whisper } from 'rsuite';
-import { forwardRef, useRef } from 'react';
-import { IconOption, IconPlayListRemove, IconInfo } from '@/icons';
+import { forwardRef, useRef, memo } from 'react';
 
-const styleCommon = 'flex items-center justify-around';
+const styleCommon = 'flex items-center justify-between';
 
-const MenuPopoverDefault = forwardRef(({ onSelect, ...rest }, ref) => {
+const MenuPopoverDefault = forwardRef(({ onSelect, dataDropDown, ...rest }, ref) => {
   return (
   <Popover ref={ref} {...rest} full>
     <Dropdown.Menu onSelect={onSelect}>
-      <Dropdown.Item className={styleCommon} eventKey={'settings'}>
-        Settings 
-        <IconOption className='ml-2.5' />
-      </Dropdown.Item>
-      <Dropdown.Item className={styleCommon} eventKey={'delete'}>
-        Delete
-        <IconPlayListRemove className='ml-2.5' />
-      </Dropdown.Item>
-      <Dropdown.Item className={styleCommon} eventKey={'about'}>
-        About
-        <IconInfo className='ml-2.5' />
-      </Dropdown.Item>
+      { 
+        dataDropDown.map(dropdownItem => {
+          return (
+            <Dropdown.Item key={dropdownItem.eventKey} className={styleCommon} eventKey={dropdownItem.eventKey}>
+              <p className='mr-2'>{ dropdownItem.name }</p>
+              { dropdownItem?.Icon && <dropdownItem.Icon/> }
+            </Dropdown.Item>
+          )
+        })
+      }
     </Dropdown.Menu>
   </Popover>
 )});
 
-function MenuPopover({ children, handleSelect, id, target }) {
+function MenuPopover({ children, handleSelect, id, target, dataDropDown, placement }) {
   const ref = useRef();
-
   return (
     <Whisper
-      placement="bottomEnd"
+      placement={placement || 'auto'}
       controlId={`control-id-with-${id}`}
       trigger="click"
       ref={ref}
       speaker={
-        <MenuPopoverDefault onSelect={ (eventKey, event) => {
+        <MenuPopoverDefault dataDropDown={dataDropDown} onSelect={ (eventKey, event) => {
           handleSelect({ 
             event, 
             eventKey, 
@@ -58,6 +54,4 @@ function MenuPopover({ children, handleSelect, id, target }) {
   )
 }
 
-export { 
-  MenuPopover
-}
+export default memo(MenuPopover);

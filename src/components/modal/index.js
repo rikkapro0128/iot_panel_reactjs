@@ -1,5 +1,5 @@
-import { Modal, Button, Input, InputPicker } from 'rsuite';
-import { useState } from 'react';
+import { Modal, Loader, Button, Input, InputPicker } from 'rsuite';
+import { useState, useEffect } from 'react';
 import { useDispatch } from "react-redux";
 import { addNode } from "@/store/nodeSlice";
 import { Toast } from '@/instance/toast.js';
@@ -20,7 +20,7 @@ const nodeExample = [
   }
 ] 
 
-function ModalInput(props) {
+function ModalInputNode(props) {
 
   const dispatch = useDispatch();
   const [nameNode, setNameNode] = useState('');
@@ -76,4 +76,45 @@ function ModalInput(props) {
   );
 }
 
-export { ModalInput };
+function ModalDynamic({ open, size, handleClose, children, title, isControll = true }) {
+  const [statusData, setStatusData] = useState(false);
+
+  useEffect(() => {
+    setStatusData(true);
+  }, [children])
+
+  return (
+    <Modal
+      size={size}
+      open={open}
+      onClose={handleClose}
+    >
+      <Modal.Header>
+        <Modal.Title>{ title || 'Không có tiêu đề' }</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {statusData ? (
+          children
+        ) : (
+          <div style={{ textAlign: 'center' }}>
+            <Loader size="md" />
+          </div>
+        )}
+      </Modal.Body>
+      {
+        isControll && (
+          <Modal.Footer>
+            <Button onClick={handleClose} appearance="primary">
+              Ok
+            </Button>
+            <Button onClick={handleClose} appearance="subtle">
+              Cancel
+            </Button>
+          </Modal.Footer>
+        )
+      }
+    </Modal>
+  )
+}
+
+export { ModalInputNode, ModalDynamic };

@@ -40,3 +40,23 @@ input[type="checkbox"]::before {
 input[type="checkbox"]:checked::before {
   transform: translate(-50%, -50%) scale(1);
 }
+
+.rs-steps-vertical .rs-steps-item {
+  padding-bottom: 0;
+}
+
+.rs-steps-small .rs-steps-item-description {
+  margin-top: 5px;
+}
+
+.miru--info > .rs-steps > .rs-steps-item .rs-steps-item-icon-wrapper {
+  width: 20px;
+  height: 20px;
+}
+.miru--info > .rs-steps > .rs-steps-item .rs-steps-item-icon-wrapper .rs-icon {
+  font-size: 10px;
+}
+
+.miru--info > .rs-steps > .rs-steps-item .rs-steps-item-tail {
+  left: 9px;
+}

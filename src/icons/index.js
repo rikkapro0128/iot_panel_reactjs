@@ -265,8 +265,70 @@ const IconGeneral = (props) => (
   </svg>
 )
 
+const IconUser = (props) => (
+  <svg
+    width={24}
+    height={24}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm-2 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"
+      fill="currentColor"
+    />
+    <path
+      d="M16 15a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v6H6v-6a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v6h-2v-6Z"
+      fill="currentColor"
+    />
+  </svg>
+)
+
+const IconPassword = (props) => (
+  <svg
+    width={24}
+    height={24}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M6 12a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM14 12a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM20 11h-4v2h4v-2Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M2 6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H2Zm20 2H2v8h20V8Z"
+      fill="currentColor"
+    />
+  </svg>
+)
+
+const IconLogout = (props) => (
+  <svg
+    width={24}
+    height={24}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M8.514 20h-4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h4v2h-4v12h4v2Z"
+      fill="currentColor"
+    />
+    <path
+      d="m13.842 17.385 1.42-1.408-3.92-3.953h9.144a1 1 0 1 0 0-2h-9.162l3.98-3.947-1.408-1.42-6.391 6.337 6.337 6.391Z"
+      fill="currentColor"
+    />
+  </svg>
+)
+
 export {
   IconAdd,
+  IconUser,
   IconBell,
   IconInfo,
   IconUndo,
@@ -274,10 +336,12 @@ export {
   IconNode,
   IconCheck,
   IconGithub,
+  IconLogout,
   IconGoogle,
   IconOption,
   IconGeneral,
   IconFacebook,
+  IconPassword,
   IconMoreVertical,
   IconPlayListRemove,
 }
