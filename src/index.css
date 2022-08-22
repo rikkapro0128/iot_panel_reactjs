@@ -59,4 +59,5 @@ input[type="checkbox"]:checked::before {
 
 .miru--info > .rs-steps > .rs-steps-item .rs-steps-item-tail {
   left: 9px;
+  top: 30px;
 }

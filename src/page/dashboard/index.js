@@ -2,14 +2,16 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState, useRef } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { Loader, Steps, Avatar, Badge, Whisper, Popover } from "rsuite";
+import { Loader, Steps, Avatar, Badge } from "rsuite";
 import { useDispatch, useSelector } from "react-redux";
-import { setNodes } from "@/store/nodeSlice";
+import Cookies from 'universal-cookie';
 
+import { setNodes } from "@/store/nodeSlice";
 import { Logo } from "@/components/logo";
 import { Node } from "@/components/node";
 import General from '@/components/general';
 import { ModalInputNode, ModalDynamic } from "@/components/modal";
+import { Toast } from '@/instance/toast.js';
 import MenuPopover from '@/components/popover';
 import { IconBell, IconNode, IconAdd, IconGeneral, IconUser, IconPassword, IconLogout } from "@/icons";
 import api from "@/api/index.js";
@@ -34,6 +36,8 @@ const dataDropDown = [
   },
 ]
 
+const cookies = new Cookies();
+
 function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -53,14 +57,21 @@ function Dashboard() {
     });
   }, []);
 
-  function handleSelectMenu({ eventKey, actions, target }) {
+  function handleSelectMenu({ eventKey, actions }) {
+    actions.close();
     if(eventKey === 'info') {
-      setToggleModalUser(true);
       // call API get user info
-      actions.close();
+      setToggleModalUser(true);
       api.get(getInfoUser_PATH).then((res) => {
         setInfoUser(res.data.user);
       });
+    }else if(eventKey === 'logout') {
+      cookies.remove('accessToken', { path: '/' });
+      cookies.remove('refreshToken', { path: '/' });
+      Toast({ type: 'success', message: 'Đăng xuát thành công!' });
+      navigate('/');
+    }else {
+      Toast({ message: 'Chức năng hiện chưa có!', option: { icon: '👏' } });
     }
   }
 

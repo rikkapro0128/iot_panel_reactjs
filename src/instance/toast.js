@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 
-export function Toast({ type = 'success', message = 'không có thông báo!', option = {
+export function Toast({ type = undefined, message = 'không có thông báo!', option = {
   success: {
     duration: 5000,
     icon: "👌",
@@ -18,6 +18,8 @@ export function Toast({ type = 'success', message = 'không có thông báo!', o
 }, promise, payloadMessage }) {
   if(type === 'promise') {
     toast[type](promise, payloadMessage, option);
+  }else if(type === undefined) {
+    toast(message, option);
   }else {
     toast[type](message, option);
   }
