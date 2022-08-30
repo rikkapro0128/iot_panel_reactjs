@@ -48,7 +48,6 @@ function Dashboard() {
   const [toggle, setToggle] = useState(false);
   const [toggleModalUser, setToggleModalUser] = useState(false);
   const [infoUser, setInfoUser] = useState(undefined);
-  const refMenuUser = useRef();
 
   useEffect(() => {
     api.get(getListNode_PATH).then((res) => {

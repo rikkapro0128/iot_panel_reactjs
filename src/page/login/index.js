@@ -1,6 +1,8 @@
 import { Form, ButtonToolbar, Button, Panel, Divider } from "rsuite";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setIdUser } from "@/store/userSlice";
 import { Toast } from "@/instance/toast.js";
 import jwt_decode from "jwt-decode";
 import Cookies from "universal-cookie";
@@ -19,6 +21,7 @@ const cookies = new Cookies();
 
 function Login() {
   let navigate = useNavigate();
+  const dispatch = useDispatch();
   const [form, setForm] = useState({});
 
   function loginAccount() {
@@ -34,6 +37,7 @@ function Login() {
             const refreshToken = response.data.refreshToken;
             const payloadAccessToken = jwt_decode(accessToken);
             const payloadRefreshToken = jwt_decode(refreshToken);
+            dispatch(setIdUser(payloadRefreshToken.idUser));
             cookies.set("accessToken", accessToken, {
               path: "/",
               expires: new Date(payloadAccessToken.exp * 1000),
