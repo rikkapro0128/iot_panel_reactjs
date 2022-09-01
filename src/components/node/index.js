@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Loader } from "rsuite";
 import { SensorDefault } from "@/components/sensor";
 import { ButtonPush, Slider, ColorPicker } from "@/components/devices";
-import { setProvider, updateSensor } from "@/store/nodeSlice";
+import { Status } from "@/components/status";
+import { setProvider, updateSensor, setStatusNode } from "@/store/nodeSlice";
 
 import api from "@/api/index.js";
 
@@ -21,6 +22,7 @@ const rgbDeviceList = {
 function Node(props) {
   const dispatch = useDispatch();
   const idUser = useSelector((state) => state.user.idUser);
+  const statusNode = useSelector((state) => state.nodes.status);
   const sensors = useSelector((state) => state.nodes.provider.sensors);
   const devices = useSelector((state) => state.nodes.provider.devices);
   const [stateConnect, setStateConnect] = useState(false);
@@ -32,9 +34,13 @@ function Node(props) {
   // console.log(idUser)
   // console.log(devices)
   // console.log(sensors)
+  useEffect(() => {
+    window.document.title = 'Miru | Node Page';
+  }, [])
 
   useEffect(() => {
     api.get(`${getListDeviceAndSensor_PATH(props["node-id"])}`).then((res) => {
+      dispatch(setStatusNode(res.data.responseData.socketStatus));
       dispatch(setProvider({
         sensors: res.data.responseData.sensors,
         devices: res.data.responseData.devices,
@@ -46,6 +52,8 @@ function Node(props) {
     // console.log("Server send message!");
     if(responseSocket?.type === '$payload_sensor') {
       dispatch(updateSensor(responseSocket.payload));
+    }else if(responseSocket?.type === '$status_node' && responseSocket?.id === props['node-id']) {
+      dispatch(setStatusNode(responseSocket.status));
     }
   }, [responseSocket]);
 
@@ -91,9 +99,12 @@ function Node(props) {
 
   return (
     <div>
-      <h5>Thông số cảm biến</h5>
+      <Status name={`node ${props['node-id']}`} status={statusNode} />
+      <h5 className="mt-2.5">Thông số cảm biến</h5>
       <div className="grid md:grid-cols-3	lg:grid-cols-4 xl:grid-cols-5 gap-2 mt-2.5">
-        {
+      {
+        sensors.length
+          ? 
           sensors.map(sensor => {
             return (
               <SensorDefault
@@ -107,22 +118,36 @@ function Node(props) {
               />
             )
           })
+          :
+          <Loader
+            size="md"
+            className="col-span-full text-center"
+            content="Loading..."
+          />
         }
       </div>
       <h5 className="mt-2.5">Điều khiển thiết bị</h5>
       <div className="grid md:grid-cols-3	lg:grid-cols-4 xl:grid-cols-5 gap-2 mt-2.5">
         {
-          devices.map(device => {
-            if(device.model === 'RELAY') {
-              return (
-                <ButtonPush btnClick={changeValueDevice} idDevice={device.id} status={device.status} key={device.name + device.model} model={device.model} val={device.val} gpio={device.gpio} title={device.name} />
-              )
-            }else if(rgbDeviceList[device.model]) {
-              return (
-                <ColorPicker pickColor={changeValueDevice} idDevice={device.id} mode={device.mode} color={device.payload} key={device.name + device.model} val={device.val} gpio={device.gpio} title={device.name} />
-              )
-            }
-          })
+          devices.length
+          ?
+            devices.map(device => {
+              if(device.model === 'RELAY') {
+                return (
+                  <ButtonPush btnClick={changeValueDevice} idDevice={device.id} status={device.status} key={device.name + device.model} model={device.model} val={device.val} gpio={device.gpio} title={device.name} />
+                )
+              }else if(rgbDeviceList[device.model]) {
+                return (
+                  <ColorPicker pickColor={changeValueDevice} idDevice={device.id} mode={device.mode} color={device.payload} key={device.name + device.model} val={device.val} gpio={device.gpio} title={device.name} />
+                )
+              }
+            })
+           :  
+            <Loader
+              size="md"
+              className="col-span-full text-center"
+              content="Loading..."
+            />
         }
         {/* <ButtonPush title="Đèn trần" />
         <Slider title="Đèn bếp" />

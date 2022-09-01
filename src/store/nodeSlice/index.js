@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   value: [],
+  status: 'offline',
   provider: {
     sensors: [],
     devices: [],
@@ -109,10 +110,13 @@ export const nodesSlice = createSlice({
           }
         })
       }
+    },
+    setStatusNode: (state, action) => {
+      state.status = action.payload;
     }
   }
 });
 
-export const { setNodes, addNode, removeNode, setProvider, updateSensor } = nodesSlice.actions;
+export const { setNodes, addNode, removeNode, setProvider, updateSensor, setStatusNode } = nodesSlice.actions;
 
 export default nodesSlice.reducer;

@@ -1,6 +1,6 @@
 import { Form, Button, Panel } from "rsuite";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { Toast } from '@/instance/toast.js'
 
@@ -13,6 +13,10 @@ function Register() {
   let navigate = useNavigate();
   const [form, setForm] = useState({});
   const [cookies, setCookie] = useCookies(["accessToken", "refreshToken"]);
+
+  useEffect(() => {
+    window.document.title = 'Miru | Register Page';
+  }, [])
 
   function resgisterAccount() {
     try {

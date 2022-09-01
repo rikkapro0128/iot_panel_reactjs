@@ -89,7 +89,7 @@ export function ColorPicker(props) {
   return (
     <div className='bg-[#292d33] rounded p-2.5'>
       <div className='mb-2 text-center text-lg flex items-center justify-center'>
-        {props.title}
+        <div className='whitespace-nowrap overflow-ellipsis overflow-hidden max-w-[138px]'>{props.title}</div>
         <div className='w-5 h-5 rounded-full ml-2' style={{ backgroundColor: `${color}`, boxShadow: `0 0 10px ${color}` }}></div>
       </div>
       <div className='flex items-center justify-center'>

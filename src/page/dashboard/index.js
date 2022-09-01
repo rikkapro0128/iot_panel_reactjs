@@ -50,6 +50,10 @@ function Dashboard() {
   const [infoUser, setInfoUser] = useState(undefined);
 
   useEffect(() => {
+    window.document.title = 'Miru | Dashboard Page';
+  }, [])
+
+  useEffect(() => {
     api.get(getListNode_PATH).then((res) => {
       dispatch(setNodes(res.data.node_list));
       setIsLoading(false);

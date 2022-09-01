@@ -1,6 +1,6 @@
 import { Form, ButtonToolbar, Button, Panel, Divider } from "rsuite";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setIdUser } from "@/store/userSlice";
 import { Toast } from "@/instance/toast.js";
@@ -23,6 +23,10 @@ function Login() {
   let navigate = useNavigate();
   const dispatch = useDispatch();
   const [form, setForm] = useState({});
+
+  useEffect(() => {
+    window.document.title = 'Miru | Login Page';
+  }, [])
 
   function loginAccount() {
     const request = api.post(pathLoginAccount, form);

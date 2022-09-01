@@ -1,8 +1,14 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect } from 'react';
 import { Logo } from '@/components/logo';
 
 function HomePage() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.document.title = 'Miru | Home Page';
+  }, [])
+  
   return (
     <div>
       <div className="container mx-auto px-4 mt-4">
