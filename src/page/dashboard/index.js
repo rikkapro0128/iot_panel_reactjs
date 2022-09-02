@@ -13,7 +13,15 @@ import General from '@/components/general';
 import { ModalInputNode, ModalDynamic } from "@/components/modal";
 import { Toast } from '@/instance/toast.js';
 import MenuPopover from '@/components/popover';
-import { IconBell, IconNode, IconAdd, IconGeneral, IconUser, IconPassword, IconLogout } from "@/icons";
+
+import PersonIcon from '@mui/icons-material/Person';
+import PasswordIcon from '@mui/icons-material/Password';
+import LogoutIcon from '@mui/icons-material/Logout';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import MemoryIcon from '@mui/icons-material/Memory';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import ViewAgendaIcon from '@mui/icons-material/ViewAgenda';
+
 import api from "@/api/index.js";
 
 const getListNode_PATH = "api/node/list";
@@ -22,17 +30,17 @@ const dataDropDown = [
   {
     eventKey: 'info',
     name: 'Thông tin của bạn',
-    Icon: IconUser,
+    Icon: <PersonIcon />,
   },
   {
     eventKey: 'change-password',
     name: 'Đổi mật khẩu',
-    Icon: IconPassword,
+    Icon: <PasswordIcon />,
   },
   {
     eventKey: 'logout',
     name: 'Đăng xuất',
-    Icon: IconLogout,
+    Icon: <LogoutIcon />,
   },
 ]
 
@@ -128,7 +136,7 @@ function Dashboard() {
             <Logo />
             <div className="grid grid-cols-2 gap-x-6 items-center">
               <Badge className="cursor-pointer flex justify-center items-center" content="99+" color="blue">
-                <IconBell />
+                <NotificationsIcon />
               </Badge>
               <MenuPopover
                 id={'controll-id-user-dropdown'}
@@ -150,13 +158,13 @@ function Dashboard() {
                   }}
                   className="cursor-pointer hover:text-slate-300 flex items-center justify-start pl-8 relative"
                 >
-                  <IconGeneral fill="white" />
+                  <ViewAgendaIcon fill="white" />
                   <p className="text-inherit p-3.5 ">Tổng quan</p>
                 </div>
                 {nodeList.map(({ _id, name }, index) => {
                   return (
                     <div key={_id} onClick={() => { navigate(`${parentPath}/node/${_id}`) }} className={`cursor-pointer hover:text-slate-300 flex items-center justify-start pl-8 relative whitespace-nowrap	`}>
-                      <IconNode />
+                      <MemoryIcon />
                       <p className="text-inherit text-center p-3.5" >
                         {name}
                       </p>
@@ -169,7 +177,7 @@ function Dashboard() {
                   }}
                   className="cursor-pointer hover:text-slate-300 flex items-center justify-start pl-8 relative"
                 >
-                  <IconAdd />
+                  <AddCircleIcon />
                   <p className="text-inherit p-3.5 ">Thêm Node</p>
                 </div>
               </div>

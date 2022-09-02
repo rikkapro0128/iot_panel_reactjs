@@ -3,24 +3,27 @@ import api from "@/api/index.js";
 import MenuPopover from '@/components/popover';
 import { useDispatch, useSelector } from "react-redux";
 import { removeNode } from "@/store/nodeSlice";
-import { IconMoreVertical, IconOption, IconPlayListRemove, IconInfo } from "@/icons";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SettingsIcon from '@mui/icons-material/Settings';
+import DeleteIcon from '@mui/icons-material/Delete';
+import InfoIcon from '@mui/icons-material/Info';
 
 const removeNodeByID_PATH = 'api/node/remove';
 const dataDropDown = [
   {
     eventKey: 'settings',
     name: 'Cài đặt',
-    Icon: IconOption,
+    Icon: <SettingsIcon />,
   },
   {
     eventKey: 'delete',
     name: 'Xóa node',
-    Icon: IconPlayListRemove,
+    Icon: <DeleteIcon />,
   },
   {
     eventKey: 'about',
     name: 'Thông tin node',
-    Icon: IconInfo,
+    Icon: <InfoIcon />,
   },
 ]
 
@@ -99,7 +102,7 @@ function General({ nodeList }) {
   }
 
   return (
-    <div className="w-full bg-[#1A1D27] shadow-lg rounded-md border border-gray-200">
+    <div className="w-full bg-[#1A1D27] shadow-lg rounded-md border border-gray-200 animate-[load-smooth_200ms_ease-in-out_alternate]">
       <header className="px-5 pt-4 border-b border-gray-100">
         <div className="font-semibold text-white">Quản lí Node</div>
       </header>
@@ -160,7 +163,7 @@ function General({ nodeList }) {
                               dataDropDown={dataDropDown}
                               handleSelect={handleSelectMenu}
                             >
-                              <IconMoreVertical className="cursor-pointer" />
+                              <MoreVertIcon className="cursor-pointer" />
                             </MenuPopover>
                           </div>
                         </td>

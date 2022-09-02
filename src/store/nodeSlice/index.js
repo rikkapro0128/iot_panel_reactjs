@@ -22,9 +22,9 @@ export const nodesSlice = createSlice({
     removeNode: (state, action) => {
       state.value = state.value.filter(node => node._id !== action.payload.id);
     },
-    setProvider: (state, action) => {
+    setProviderSensors: (state, action) => {
 
-      state.provider.sensors = action.payload.sensors.reduce((oldPayload, newPayload) => {
+      state.provider.sensors = action.payload.reduce((oldPayload, newPayload) => {
         if(newPayload.sensor.typeModel === 'DHT21') {
           return [
             ...oldPayload,
@@ -56,41 +56,24 @@ export const nodesSlice = createSlice({
           ]
         }
       }, [])
-
-      state.provider.devices = action.payload.devices.reduce((oldPayload, newPayload) => {
-        if(newPayload.device.typeModel === 'RELAY') {
-          return [
-            ...oldPayload,
-            ...newPayload.sampleDevice.map((sample) => {
-              return {
-                id: sample.bindDevice,
-                model: newPayload.device.typeModel,
-                unit: newPayload.device.unit,
-                name: `Relay ${sample.val}`,
-                val: sample.val,
-                gpio: sample.gpio,
-                status: sample.status,
-              }
-            })
-          ]
-        }else {
-          return [
-            ...oldPayload,
-            ...newPayload.sampleDevice.map(sample => {
-              return {
-                id: sample.bindDevice,
-                model: newPayload.device.typeModel,
-                unit: newPayload.device.unit,
-                name: `${newPayload.device.name}`,
-                mode: sample?.mode,
-                val: sample.val,
-                gpio: sample.gpio,
-                payload: sample?.payload,
-              }
-            })
-          ]
-        }
+    },
+    setProviderDevices: (state, action) => {
+      state.provider.devices = action.payload.reduce((oldPayload, newPayload) => {
+        // name, id, status, model, val, gpio, 
+        return [
+          ...oldPayload,
+          ...newPayload.pins.map(pin => {
+            return {
+              id: newPayload?._id,
+              name: newPayload?.name,
+              model: newPayload?.typeModel,
+              unit: newPayload?.unit,
+              ...pin
+            }
+          })
+        ]
       }, [])
+
     },
     updateSensor: (state, action) => {
       if(action.payload.model === 'DHT21') {
@@ -117,6 +100,6 @@ export const nodesSlice = createSlice({
   }
 });
 
-export const { setNodes, addNode, removeNode, setProvider, updateSensor, setStatusNode } = nodesSlice.actions;
+export const { setNodes, addNode, removeNode, setProviderSensors, setProviderDevices, updateSensor, setStatusNode } = nodesSlice.actions;
 
 export default nodesSlice.reducer;

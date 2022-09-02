@@ -43,7 +43,7 @@ export function ButtonPush(props) {
   }, [click])
 
   return (
-    <div className='bg-[#292d33] rounded p-2.5'>
+    <div className='bg-[#292d33] rounded p-2.5 animate-[load-smooth_200ms_ease-in-out_alternate]'>
       <div className='mb-2 text-center text-lg flex items-center justify-center'>
         {props.title}
         <p className={`w-2.5 h-2.5 ml-2.5 rounded-full transition-colors shadow-md`} style={{ background: state.signal }}></p>
@@ -57,7 +57,7 @@ export function ButtonPush(props) {
 
 export function Slider(props) {
   return (
-    <div className='bg-[#292d33] rounded p-2.5'>
+    <div className='bg-[#292d33] rounded p-2.5 animate-[load-smooth_200ms_ease-in-out_alternate]'>
       <div className='mb-2 text-center text-lg flex items-center justify-center'>
         {props.title}
       </div>
@@ -70,7 +70,7 @@ export function Slider(props) {
 
 export function ColorPicker(props) {
   const colorPicker = useRef();
-  const [color, setColor] = useState(() => (props.mode === 'color-off') ? `#000` : rgbToHex(...props.color));
+  const [color, setColor] = useState(() => (props?.mode === 'color-off') ? `#000` : (props?.color ? rgbToHex(...props?.color) : rgbToHex(0, 0, 0) ));
 
   const onColorChange = (event) => {
     setColor(event.target.value);
@@ -87,7 +87,7 @@ export function ColorPicker(props) {
   }, [colorPicker])
 
   return (
-    <div className='bg-[#292d33] rounded p-2.5'>
+    <div className='bg-[#292d33] rounded p-2.5 animate-[load-smooth_200ms_ease-in-out_alternate]'>
       <div className='mb-2 text-center text-lg flex items-center justify-center'>
         <div className='whitespace-nowrap overflow-ellipsis overflow-hidden max-w-[138px]'>{props.title}</div>
         <div className='w-5 h-5 rounded-full ml-2' style={{ backgroundColor: `${color}`, boxShadow: `0 0 10px ${color}` }}></div>

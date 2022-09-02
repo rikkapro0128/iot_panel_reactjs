@@ -12,7 +12,7 @@ const MenuPopoverDefault = forwardRef(({ onSelect, dataDropDown, ...rest }, ref)
           return (
             <Dropdown.Item key={dropdownItem.eventKey} className={styleCommon} eventKey={dropdownItem.eventKey}>
               <p className='mr-2'>{ dropdownItem.name }</p>
-              { dropdownItem?.Icon && <dropdownItem.Icon/> }
+              { dropdownItem.Icon }
             </Dropdown.Item>
           )
         })
