@@ -10,6 +10,26 @@ import Login from "@/page/login";
 import Register from "@/page/register"; 
 import Dashboard from "./page/dashboard";
 import { Auth, Protect } from '@/auth';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 function App () {
 

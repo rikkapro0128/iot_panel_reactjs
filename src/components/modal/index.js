@@ -5,6 +5,25 @@ import { addNode } from "@/store/nodeSlice";
 import { Toast } from '@/instance/toast.js';
 import api from '@/api/index.js';
 
+// use by Modal
+import Backdrop from '@mui/material/Backdrop';
+import Box from '@mui/material/Box';
+import ModalMui from '@mui/material/Modal';
+import Fade from '@mui/material/Fade';
+
+const styleModal = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  minWidth: 400,
+  backgroundColor: '#292d33',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+  borderRadius: '6px',
+};
+
 const nodeExample = [
   {
     label: 'Node ESP8266 Wifi',
@@ -117,4 +136,26 @@ function ModalDynamic({ open, size, handleClose, children, title, isControll = t
   )
 }
 
-export { ModalInputNode, ModalDynamic };
+function MaterialDefaultModal({ open = false, handleClose, children }) {
+  return (
+    <ModalMui
+      aria-labelledby="transition-modal-title"
+      aria-describedby="transition-modal-description"
+      open={open}
+      onClose={handleClose}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+      BackdropProps={{
+        timeout: 200,
+      }}
+    >
+      <Fade in={open}>
+        <Box sx={styleModal}>
+          { children }
+        </Box>
+      </Fade>
+    </ModalMui>
+  );
+}
+
+export { ModalInputNode, ModalDynamic, MaterialDefaultModal };

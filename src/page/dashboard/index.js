@@ -82,7 +82,7 @@ function Dashboard() {
       Toast({ type: 'success', message: 'Đăng xuát thành công!' });
       navigate('/');
     }else {
-      Toast({ message: 'Chức năng hiện chưa có!', option: { icon: '👏' } });
+      Toast({ message: 'Chức năng hiện chưa có!' });
     }
   }
 
@@ -135,7 +135,7 @@ function Dashboard() {
           <div className="flex justify-between mb-5">
             <Logo />
             <div className="grid grid-cols-2 gap-x-6 items-center">
-              <Badge className="cursor-pointer flex justify-center items-center" content="99+" color="blue">
+              <Badge onClick={() => { Toast({ message: 'Chức năng hiện chưa có!' }); }} className="cursor-pointer flex justify-center items-center" content="99+" color="blue">
                 <NotificationsIcon />
               </Badge>
               <MenuPopover
