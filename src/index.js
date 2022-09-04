@@ -10,13 +10,101 @@ import { Toaster } from 'react-hot-toast';
 import { Provider } from 'react-redux';
 import { store } from '@/store/index.js';
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+const theme = createTheme({
+  components: {
+    // Name of the component
+    MuiListItemText: {
+      styleOverrides: {
+        // Name of the slot
+        secondary: {
+          // Some CSS
+          color: '#ccc',
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        notchedOutline: {
+          borderColor: 'rgb(78 78 78)',
+          ":hover" : {
+            borderColor: '#fff',
+          }
+        }
+      }
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        formControl: {
+          color: '#ccc',
+        },
+      }
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          formControl: {
+            color: '#ccc',
+          },
+          input: {
+            color: '#ccc',
+            textAlign: 'center'
+          }
+        }
+      }
+    },
+    MuiSelect: {
+      styleOverrides: {
+        select: {
+          color: '#ccc',
+        },
+        icon: {
+          color: '#ccc',
+        },
+        iconOutlined: {
+          color: '#ccc',
+        },
+        iconOpen: {
+          color: 'rgb(25, 118, 210)',
+        },
+        iconFilled: {
+          color: 'rgb(25, 118, 210)',
+        },
+        iconStandard: {
+          color: 'rgb(25, 118, 210)',
+        },
+      }
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          background: '#1F1F1F',
+          color: '#fff',
+        }
+      }
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          '&:hover': {
+            background: '#323232',
+          }
+        }
+      }
+    }
+  },
+});
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
   <Provider store={store}>
     <Theme>
-      <App />
-      <Toaster />
+      <ThemeProvider theme={theme}>
+        <App />
+        <Toaster />
+      </ThemeProvider>
     </Theme>
   </Provider>
   //{/* </React.StrictMode> */}

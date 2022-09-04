@@ -7,7 +7,14 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import LabelImportantIcon from '@mui/icons-material/LabelImportant';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+
 import { Toast } from '@/instance/toast.js';
 
 import { SensorDefault } from "@/components/sensor";
@@ -21,10 +28,12 @@ import { cacheImage } from '@/utils';
 
 import api from "@/api/index.js";
 
-const getPayloadChartSensor_PATH = (id, options) => `api/node/sensor/${id}/chart?${options.reduce((present, option, index) => index ? `${present}&${option.field}=${option.value}` : `${option.field}=${option.value}`, '')}`;
+const getPayloadChartSensor_PATH = (id, params) => `api/node/sensor/v2/${id}/chart${params}`;
 const getListDeviceAndSensor_PATH = (id) =>
   `api/node/${id}?sensors=true&devices=true`;
 const pathConnectSocketServer = `${process.env.REACT_APP_SOCKET_SERVER_API_HOST}:${process.env.REACT_APP_SOCKET_SERVER_API_PORT}`;
+const defaultQueryChartSensor = [{ field: 'timeline', value: 'hour'}, { field: 'sort', value: 'asc' }, { field: 'range', value: 60 * 2 }];
+
 const reverseColor = {
   'DHT21-temperature': true,
 }
@@ -33,20 +42,40 @@ const rgbDeviceList = {
   'RGB-CHAIN-STRAIGHT': true,
 }
 
-const theme = createTheme({
-  components: {
-    // Name of the component
-    MuiListItemText: {
-      styleOverrides: {
-        // Name of the slot
-        secondary: {
-          // Some CSS
-          color: '#ccc',
-        },
-      },
-    },
+const InstanceTimeline = [
+  {
+    key: 'second',
+    value: 'Giây'
   },
-});
+  {
+    key: 'minute',
+    value: 'Phút'
+  },
+  {
+    key: 'hour',
+    value: 'Giờ'
+  },
+  {
+    key: 'date',
+    value: 'Ngày'
+  },
+  {
+    key: 'week',
+    value: 'Tuần'
+  },
+  {
+    key: 'month',
+    value: 'Tháng'
+  },
+]
+
+const levelTimeline = {
+  'minute': 1,
+  'hour': 2,
+  'date': 3,
+  'week': 4,
+  'month': 5,
+}
 
 const fakeDataDescSensor = {
   'DHT21-temperature': {
@@ -87,9 +116,11 @@ function Node(props) {
   const [openModalDetailsSensor, setOpenModalDetailsSensor] = useState(false);
   const [openModalChartsSensor, setOpenModalChartsSensor] = useState(false);
   const [payloadChartSensor, setPayloadChartSensor] = useState(undefined);
+  const [optionsQueryChart, setOptionsQueryChart] = useState({ timeline: 'hour', sort: 'asc', range: 2 * 60, type: 'second' });
   const [dense, setDense] = useState(false);
   const [loadImageModal, setLoadImageModal] = useState(true); // true is loading
   const [payloadModal, setPayloadModal] = useState(undefined);
+  const [pickSensor, setPickSensor] = useState(undefined);
   const [statusProviderSensor, setStatusProviderSensor] = useState(false);
   const [statusProviderDevice, setStatusProviderDevice] = useState(false);
   const idUser = useSelector((state) => state.user.idUser);
@@ -167,6 +198,40 @@ function Node(props) {
     };
   }, [ws]);
 
+  useEffect(() => {
+    if(pickSensor) {
+      requestChartSensor();
+    }
+  }, [pickSensor])
+
+  function requestChartSensor() {
+    const transformRange = (range, type) => {
+      if(type === 'second') {
+        return range
+      }
+      else if(type === 'minute') {
+        return range * 60;
+      }
+      else if(type === 'hour') {
+        return range * 3600;
+      }
+      else if(type === 'date') {
+        return range * 86400;
+      }
+      else if(type === 'week') {
+        return range * 86400;
+      }
+      else if(type === 'month') {
+        return range * 604800;
+      }
+    }
+    const params = `?timeline=${optionsQueryChart.timeline}&sort=${optionsQueryChart.sort}&range=${transformRange(optionsQueryChart.range, optionsQueryChart.type)}`
+    const url = getPayloadChartSensor_PATH(pickSensor.id, params);
+    api.get(url).then(response => {
+      setPayloadChartSensor({ payload: response.data.payload, ...pickSensor });
+    })
+  }
+
   function changeValueDevice(device) {
     if(stateConnect) {
       device.type = 'controll';
@@ -187,20 +252,96 @@ function Node(props) {
       })
     }else if(eventKey === 'view-chart') {
       setOpenModalChartsSensor(true);
-      setPayloadChartSensor(undefined);
-      api.get(getPayloadChartSensor_PATH(sensor.id, [{ field: 'timeline', value: 'hour'}, { field: 'sort', value: 'asc' }])).then(response => {
-        setPayloadChartSensor({ payload: response.data.payload, ...sensor });
-      })
+      if(payloadChartSensor) { setPayloadChartSensor(undefined); }
+      setPickSensor(sensor);
     }else {
       Toast({ message: 'Chức năng hiện chưa có!' });
     }
     actions.close();
   }
 
+  function handleChangeChartTimeline(event) {
+    setOptionsQueryChart({ ...optionsQueryChart, timeline: event.target.value })
+  }
+
+  function handleChangeChartSort(event) {
+    setOptionsQueryChart({ ...optionsQueryChart, sort: event.target.value })
+  }
+
+  function handleChangeChartRange(event) {
+    const range = event.target.value;
+    setOptionsQueryChart({ ...optionsQueryChart, range: range ? parseInt(range) : 0 })
+  }
+
+  function handleChangeChartType(event) {
+    setOptionsQueryChart({ ...optionsQueryChart, type: event.target.value })
+  }
+
   return (
     <div>
-      <MaterialDefaultModal open={openModalChartsSensor} handleClose={() => { setOpenModalChartsSensor(false) }}>
-        <ChartSensor sensor={payloadChartSensor} label={payloadChartSensor?.name} />
+      <MaterialDefaultModal open={openModalChartsSensor} handleClose={() => { setOpenModalChartsSensor(false); setPickSensor(undefined); }}>
+        <>
+          <Box sx={{ display: 'flex' }}>
+            <FormControl sx={{ m: 1, minWidth: 140 }} size="small">
+              <InputLabel id="demo-select-small">Hiển thị</InputLabel>
+              <Select
+                labelId="demo-select-small"
+                id="demo-select-small"
+                value={optionsQueryChart.timeline}
+                label="Hiển thị"
+                onChange={handleChangeChartTimeline}
+              >
+                <MenuItem value={'minute'}>1 phút trước</MenuItem>
+                <MenuItem selected value={'hour'}>1 giờ trước</MenuItem>
+                <MenuItem value={'date'}>1 ngày trước</MenuItem>
+                <MenuItem value={'week'}>1 tuần trước</MenuItem>
+                <MenuItem value={'month'}>1 tháng trước</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl sx={{ m: 1, minWidth: 140 }} size="small">
+              <InputLabel id="demo-select-small">Sắp xếp</InputLabel>
+              <Select
+                labelId="demo-select-small"
+                id="demo-select-small"
+                value={optionsQueryChart.sort}
+                label="Sắp xếp"
+                onChange={handleChangeChartSort}
+              >
+                <MenuItem selected value={'asc'}>Tăng dần</MenuItem>
+                <MenuItem value={'desc'}>Giảm dần</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              sx={{ m: 1, width: 100 }}
+                id="outlined-error"
+                label="Lấy mẫu"
+                defaultValue={optionsQueryChart.range}
+                size="small"
+                type="number"
+                onChange={handleChangeChartRange}
+            />
+            <FormControl sx={{ m: 1, minWidth: 140 }} size="small">
+              <InputLabel id="demo-select-small">Đơn vị</InputLabel>
+              <Select
+                labelId="demo-select-small"
+                id="demo-select-small"
+                value={optionsQueryChart.type}
+                label="Đơn vị"
+                onChange={handleChangeChartType}
+              >
+                {
+                  Array(levelTimeline[optionsQueryChart.timeline]).fill(0).map((item, index) => {
+                    return <MenuItem key={InstanceTimeline[index].key} selected={ index === 0 ? true : false } value={InstanceTimeline[index].key}>Theo { InstanceTimeline[index].value }</MenuItem>
+                  })
+                }
+              </Select>
+            </FormControl>
+            <Button sx={{ m: 1 }} className="whitespace-nowrap" onClick={requestChartSensor} variant="contained">Áp dụng</Button>
+          </Box>
+          <div className=" w-full text-center mt-8">
+            <ChartSensor sensor={payloadChartSensor} label={payloadChartSensor?.name} />
+          </div>
+        </>
       </MaterialDefaultModal>
       <MaterialDefaultModal open={openModalDetailsSensor} handleClose={() => { setOpenModalDetailsSensor(false) }}>
         <div className="flex">
@@ -220,13 +361,11 @@ function Node(props) {
           <List className='select-none' dense={dense}>
             <ListItem>
               <LabelImportantIcon  sx={{ mx: 2 }} className='text-white' />
-              <ThemeProvider theme={theme}>
                 <ListItemText
                   primary="Tên Sensor"
                   secondary={payloadModal?.name}
                   color={'#fff'}
                 />
-              </ThemeProvider>
             </ListItem>
               {
                 payloadModal?.desc.map(desc => {
