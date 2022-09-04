@@ -31,7 +31,7 @@ import api from "@/api/index.js";
 const getPayloadChartSensor_PATH = (id, params) => `api/node/sensor/v2/${id}/chart${params}`;
 const getListDeviceAndSensor_PATH = (id) =>
   `api/node/${id}?sensors=true&devices=true`;
-const pathConnectSocketServer = `${process.env.REACT_APP_SOCKET_SERVER_API_HOST}:${process.env.REACT_APP_SOCKET_SERVER_API_PORT}`;
+const pathConnectSocketServer = `${process.env.REACT_APP_SOCKET_SERVER_API_HOST}`;
 const defaultQueryChartSensor = [{ field: 'timeline', value: 'hour'}, { field: 'sort', value: 'asc' }, { field: 'range', value: 60 * 2 }];
 
 const reverseColor = {

@@ -13,7 +13,7 @@ const defaultOptions = {
 };
 
 const instance = axios.create({
-  baseURL: `${process.env.REACT_APP_SERVER_API_HOST}:${process.env.REACT_APP_SERVER_API_PORT}/`,
+  baseURL: `${process.env.REACT_APP_SERVER_API_HOST}/`,
   headers: defaultOptions,
 });
 
