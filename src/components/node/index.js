@@ -417,7 +417,7 @@ function Node(props) {
               })
             :
             (
-              <div className="col-span-full">
+              <div className="col-span-full animate-[load-smooth_200ms_ease-in-out_alternate]">
                 <img className="block w-40 h-auto m-auto" src={`${process.env.REACT_APP_SERVER_API_HOST}/static/common/oops.svg`} alt="dragon" />
                 <p className="text-lg	text-center mt-5 italic">Không có cảm biến nào được tìm thấy!</p>
               </div>
@@ -455,7 +455,7 @@ function Node(props) {
                 })
               :
               (
-                <div className="col-span-full">
+                <div className="col-span-full animate-[load-smooth_200ms_ease-in-out_alternate]">
                   <img className="block w-40 h-auto m-auto" src={`${process.env.REACT_APP_SERVER_API_HOST}/static/common/oops.svg`} alt="dragon" />
                   <p className="text-lg	text-center mt-5 italic">Không có thiết bị nào được tìm thấy!</p>
                 </div>

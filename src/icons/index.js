@@ -326,15 +326,61 @@ const IconLogout = (props) => (
   </svg>
 )
 
+const IconConcat = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={512}
+    height={512}
+    viewBox="0 0 418.5 418.5"
+    style={{
+      enableBackground: "new 0 0 512 512",
+    }}
+    xmlSpace="preserve"
+    {...props}
+  >
+    <path
+      d="M280.8 71.55C280.8 32.097 248.706 0 209.25 0c-39.453 0-71.55 32.097-71.55 71.55 0 32.817 21.858 60.956 53.428 69.175v137.049c-31.564 8.21-53.428 36.35-53.428 69.177 0 39.456 32.097 71.55 71.55 71.55 39.456 0 71.551-32.094 71.551-71.55 0-32.816-21.858-60.956-53.431-69.177V140.725c31.572-8.219 53.43-36.358 53.43-69.175z"
+      fill="#fff"
+      data-original="#000000"
+      xmlns="http://www.w3.org/2000/svg"
+    />
+  </svg>
+)
+
+const IconWave = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    xmlnsXlink="http://www.w3.org/1999/xlink"
+    viewBox="0 24 150 28"
+    preserveAspectRatio="none"
+    {...props}
+  >
+    <defs>
+      <path
+        id="a"
+        d="M-160 44c30 0 58-18 88-18s58 18 88 18 58-18 88-18 58 18 88 18v44h-352z"
+      />
+    </defs>
+    <g className="parallax">
+      <use className="fill-green-100" xlinkHref="#a" x={48} fill="rgba(255,255,255,0.7" />
+      <use className="fill-green-200" xlinkHref="#a" x={48} y={3} fill="rgba(255,255,255,0.5)" />
+      <use className="fill-green-300" xlinkHref="#a" x={48} y={5} fill="rgba(255,255,255,0.3)" />
+      <use className="fill-green-400" xlinkHref="#a" x={48} y={7} fill="#fff" />
+    </g>
+  </svg>
+)
+
 export {
   IconAdd,
   IconUser,
   IconBell,
   IconInfo,
   IconUndo,
+  IconWave,
   IconSign,
   IconNode,
   IconCheck,
+  IconConcat,
   IconGithub,
   IconLogout,
   IconGoogle,

@@ -92,6 +92,18 @@ const theme = createTheme({
           }
         }
       }
+    },
+    MuiDivider: {
+      styleOverrides: {
+        root: {
+          '&:before': {
+            borderTopColor: '#5c5c5c'
+          },
+          '&:after': {
+            borderTopColor: '#5c5c5c'
+          },
+        }
+      }
     }
   },
 });

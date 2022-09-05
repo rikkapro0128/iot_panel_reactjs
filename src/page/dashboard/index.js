@@ -132,7 +132,7 @@ function Dashboard() {
         />
       ) : (
         <div className="lg:max-w-7xl mx-auto px-4 mt-4 ">
-          <div className="flex justify-between mb-5">
+          <div className="flex justify-between mb-10">
             <Logo />
             <div className="grid grid-cols-2 gap-x-6 items-center">
               <Badge onClick={() => { Toast({ message: 'Chức năng hiện chưa có!' }); }} className="cursor-pointer flex justify-center items-center" content="99+" color="blue">

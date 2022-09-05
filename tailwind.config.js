@@ -5,6 +5,12 @@ module.exports = {
     preflight: false,
   },
   theme: {
+    screens: {
+      'max-sm': {'max': '480px'},
+      // => @media (max-width: 480px) { ... }
+      'min-md': '940px'
+      // => @media (min-width: 940px) { ... }
+    },
     extend: {
       backgroundImage: {
         "hero-pattern": "url('assets/images/hero-img.svg')",
