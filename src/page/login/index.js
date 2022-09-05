@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setIdUser } from "@/store/userSlice";
 import { Toast } from "@/instance/toast.js";
-import jwt_decode from "jwt-decode";
-import Cookies from "universal-cookie";
+import { assignToken } from '@/utils';
 
 import {
   IconGithub,
@@ -17,7 +16,6 @@ import {
 import api from "@/api/index.js";
 
 const pathLoginAccount = "api/user/login";
-const cookies = new Cookies();
 
 function Login() {
   let navigate = useNavigate();
@@ -39,18 +37,10 @@ function Login() {
           try {
             const accessToken = response.data.accessToken;
             const refreshToken = response.data.refreshToken;
-            const payloadAccessToken = jwt_decode(accessToken);
-            const payloadRefreshToken = jwt_decode(refreshToken);
-            dispatch(setIdUser(payloadRefreshToken.idUser));
-            cookies.set("accessToken", accessToken, {
-              path: "/",
-              expires: new Date(payloadAccessToken.exp * 1000),
-            });
-            cookies.set("refreshToken", refreshToken, {
-              path: "/",
-              expires: new Date(payloadRefreshToken.exp * 1000),
-            });
-            navigate(`/`);
+            assignToken({ accessToken, refreshToken }, (payload) => {
+              dispatch(setIdUser(payload.idUser));
+              navigate(`/`);
+            })
             return "Bạn đã đăng nhập thành công👻";
           } catch (error) {
             console.log(error);

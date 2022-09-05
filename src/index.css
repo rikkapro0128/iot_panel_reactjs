@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+img {
+  -webkit-user-drag: none;
+}
+
 .RCP {
   width: 100% !important;
 }

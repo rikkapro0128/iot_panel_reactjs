@@ -172,7 +172,7 @@ function General({ nodeList }) {
                   })
                 : (
                   <tr>
-                    <td colspan="5" className="text-center p-4 bg-[#384152]">
+                    <td colSpan="5" className="text-center p-4 bg-[#384152]">
                       Bạn chưa đăng ký node nào cả!
                     </td>
                   </tr>

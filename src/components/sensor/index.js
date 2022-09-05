@@ -2,6 +2,7 @@ import ProgressBar from 'react-customizable-progressbar';
 import { useEffect, useState } from 'react';
 
 import Tooltip from '@mui/material/Tooltip';
+import iconSensorByModel from '@/utils/iconSensorByModel.js';
 
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -58,8 +59,13 @@ export function SensorDefault(props) {
 
   return (
     <div className="bg-[#292d33] rounded p-2.5 animate-[load-smooth_200ms_ease-in-out_alternate]">
-      <div className='flex justify-between	'>
-        <p className="text-lg text-center">{props.title}</p>
+      <div className='flex justify-between items-center'>
+        <img className='block w-10 h-auto mr-2' src={props.model in iconSensorByModel ? `${process.env.REACT_APP_SERVER_API_HOST}/static/common/${iconSensorByModel[props.model]}.svg` : ''} alt={props.model} />
+        <Tooltip title={ props.title } placement="top">
+          <p className="cursor-help text-sm text-center whitespace-nowrap">
+            { props.title }
+          </p>
+        </Tooltip>
         <MenuPopover
           id={'controll-id-user-dropdown'}
           target={'user-dropdown'}

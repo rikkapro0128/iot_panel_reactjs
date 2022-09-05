@@ -2,7 +2,10 @@ import { Form, Button, Panel } from "rsuite";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
-import { Toast } from '@/instance/toast.js'
+import { useDispatch } from "react-redux";
+import { setIdUser } from "@/store/userSlice";
+import { Toast } from '@/instance/toast.js';
+import { assignToken } from '@/utils';
 
 import api from "@/api/index.js";
 import { IconUndo, IconSign } from "@/icons";
@@ -11,6 +14,7 @@ const pathRegisterAccount = "api/user/register";
 
 function Register() {
   let navigate = useNavigate();
+  const dispatch = useDispatch();
   const [form, setForm] = useState({});
   const [cookies, setCookie] = useCookies(["accessToken", "refreshToken"]);
 
@@ -27,9 +31,12 @@ function Register() {
         payloadMessage: {
           loading: "Đang tạo tài khoản!",
           success: (response) => {
-            setCookie("accessToken", response.data.accessToken, { path: '/' });
-            setCookie("refreshToken", response.data.refreshToken, { path: '/' });
-            navigate(`/`);
+            const accessToken = response.data.accessToken;
+            const refreshToken = response.data.refreshToken;
+            assignToken({ accessToken, refreshToken }, (payload) => {
+              dispatch(setIdUser(payload.idUser));
+              navigate(`/`);
+            })
             return "Bạn đã tạo tài khoản thành công👻";
           },
           error: "Không thể tạo tài khoản!",

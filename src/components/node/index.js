@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Loader } from "rsuite";
 import { setProviderSensors, setProviderDevices, updateSensor, setStatusNode } from "@/store/nodeSlice";
+
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import LabelImportantIcon from '@mui/icons-material/LabelImportant';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -25,14 +27,12 @@ import { ChartSensor } from '@/components/charts/sensor.js';
 
 import { cacheImage } from '@/utils';
 
-
 import api from "@/api/index.js";
 
 const getPayloadChartSensor_PATH = (id, params) => `api/node/sensor/v2/${id}/chart${params}`;
 const getListDeviceAndSensor_PATH = (id) =>
   `api/node/${id}?sensors=true&devices=true`;
 const pathConnectSocketServer = `${process.env.REACT_APP_SOCKET_SERVER_API_HOST}`;
-const defaultQueryChartSensor = [{ field: 'timeline', value: 'hour'}, { field: 'sort', value: 'asc' }, { field: 'range', value: 60 * 2 }];
 
 const reverseColor = {
   'DHT21-temperature': true,
@@ -384,8 +384,11 @@ function Node(props) {
         </div>
       </MaterialDefaultModal>
       <Status name={`node ${props['node-id']}`} status={statusNode} />
-      <h5 className="mt-2.5">Thông số cảm biến</h5>
-      <div className="grid md:grid-cols-3	lg:grid-cols-4 xl:grid-cols-5 gap-2 mt-2.5">
+      <h5 className="flex items-center my-5">
+        <LocalOfferIcon className="mr-2.5"/>
+        Thông số cảm biến
+      </h5>
+      <div className="grid md:grid-cols-3	lg:grid-cols-4 xl:grid-cols-5 gap-2">
       {
         loading
           ? 
@@ -407,17 +410,26 @@ function Node(props) {
                     value={typeof sensor.value === 'number' ? sensor.value.toFixed(1) : 0}
                     unit={sensor.unit}
                     title={sensor.name}
+                    model={sensor.model}
                     handleOptions={(ref) => { handleOptionsBySensor(ref, sensor) }}
                   />
                 )
               })
             :
-              <p>Không tìm thấy sensor nào cả!</p>
+            (
+              <div className="col-span-full">
+                <img className="block w-40 h-auto m-auto" src={`${process.env.REACT_APP_SERVER_API_HOST}/static/common/oops.svg`} alt="dragon" />
+                <p className="text-lg	text-center mt-5 italic">Không có cảm biến nào được tìm thấy!</p>
+              </div>
+            )
           )
         }
       </div>
-      <h5 className="mt-2.5">Điều khiển thiết bị</h5>
-      <div className="grid md:grid-cols-3	lg:grid-cols-4 xl:grid-cols-5 gap-2 mt-2.5">
+      <h5 className="flex items-center my-5">
+        <LocalOfferIcon className="mr-2.5"/>
+        Điều khiển thiết bị
+      </h5>
+      <div className="grid md:grid-cols-3	lg:grid-cols-4 xl:grid-cols-5 gap-2">
         {
           loading
           ? 
@@ -433,7 +445,7 @@ function Node(props) {
                 devices.map(device => {
                   if(device?.model === 'RELAY') {
                     return (
-                      <ButtonPush btnClick={changeValueDevice} idDevice={device?.id} status={device?.status} key={device._id || device.id} model={device?.model} val={device?.val} gpio={device?.gpio} title={device?.name} />
+                      <ButtonPush btnClick={changeValueDevice} idDevice={device?.id} status={device?.status} key={device._id || device.id} model={device?.model} val={device?.val} gpio={device?.gpio} title={device?.softName || device?.val} />
                     )
                   }else if(rgbDeviceList[device?.model]) {
                     return (
@@ -442,7 +454,12 @@ function Node(props) {
                   }
                 })
               :
-                <p>Không tìm thấy device nào cả!</p>
+              (
+                <div className="col-span-full">
+                  <img className="block w-40 h-auto m-auto" src={`${process.env.REACT_APP_SERVER_API_HOST}/static/common/oops.svg`} alt="dragon" />
+                  <p className="text-lg	text-center mt-5 italic">Không có thiết bị nào được tìm thấy!</p>
+                </div>
+              )
             )
         }
         {/* <ButtonPush title="Đèn trần" />
