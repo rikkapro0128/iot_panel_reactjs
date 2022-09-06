@@ -4,8 +4,12 @@ import jwt_decode from "jwt-decode";
 
 const cookies = new Cookies();
 
+const refreshToken = cookies.get('refreshToken');
+
 const initialState = {
-  idUser: cookies.get('refreshToken') ? jwt_decode(cookies.get('refreshToken').split(' ')[1]).idUser : undefined,
+  idUser: refreshToken ? jwt_decode(refreshToken.split(' ')[1]).idUser : undefined,
+  isLogin: refreshToken ? true : false,
+  info: {}
 }
 
 export const userSlice = createSlice({
@@ -14,10 +18,13 @@ export const userSlice = createSlice({
   reducers: {
     setIdUser: (state, action) => {
       state.idUser = action.payload;
+    },
+    setInfoUser: (state, action) => {
+      state.info = action.payload;
     }
   }
 });
 
-export const { setIdUser } = userSlice.actions;
+export const { setIdUser, setInfoUser } = userSlice.actions;
 
 export default userSlice.reducer;

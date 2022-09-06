@@ -39,7 +39,7 @@ function Login() {
             const refreshToken = response.data.refreshToken;
             assignToken({ accessToken, refreshToken }, (payload) => {
               dispatch(setIdUser(payload.idUser));
-              navigate(`/`);
+              navigate(`/dashboard/general`);
             })
             return "Bạn đã đăng nhập thành công👻";
           } catch (error) {

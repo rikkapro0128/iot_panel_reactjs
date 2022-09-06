@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import api from "@/api/index.js";
-import MenuPopover from '@/components/popover';
 import { useDispatch, useSelector } from "react-redux";
 import { removeNode } from "@/store/nodeSlice";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SettingsIcon from '@mui/icons-material/Settings';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
+
+import MenuPopover from '@/components/popover';
+import Hidden from '@/components/hidden';
 
 const removeNodeByID_PATH = 'api/node/remove';
 const dataDropDown = [
@@ -143,9 +145,7 @@ function General({ nodeList }) {
                           <input ref={(ele) => { eleRefs.current[node._id] = ele }} type={'checkbox'} value={node._id} onChange={handleCheckSingle} />
                         </td>
                         <td className="p-2">
-                          <div className="font-medium text-slate-400">
-                            {node._id}
-                          </div>
+                          <Hidden payload={node._id} />
                         </td>
                         <td className="p-2">
                           <div className="font-medium text-white">{node.name}</div>

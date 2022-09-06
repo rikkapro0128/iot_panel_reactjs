@@ -6,15 +6,17 @@ import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
 
-function Auth() {
+function Auth({ navigateTo = '/', isToast = true, children }) {
   const navigate = useNavigate();
   const [auth, setAuth] = useState(false);
   useEffect(() => {
     const accessToken = cookies.get('accessToken');
     const refreshToken = cookies.get('refreshToken');
     if(accessToken || refreshToken) {
-      navigate('/');
-      Toast({ type: 'error', message: 'Bạn đã đăng nhập rồi mà!'});
+      navigate(navigateTo);
+      if(isToast) {
+        Toast({ type: 'error', message: 'Bạn đã đăng nhập rồi mà!'});
+      }
     }else {
       setAuth(true);
     }

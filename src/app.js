@@ -36,7 +36,9 @@ function App () {
   return (
     <HistoryRouter history={history}>
       <Routes>
-        <Route path="/" element={<HomePage />}></Route>
+        <Route path="/" element={<Auth navigateTo='/dashboard/general' isToast={false} />}>
+          <Route path="/" element={<HomePage />} />
+        </Route>
         <Route path="/dashboard/*" element={
           <Protect>
             <Dashboard />

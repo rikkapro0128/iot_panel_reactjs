@@ -5,7 +5,6 @@ import { setProviderSensors, setProviderDevices, updateSensor, setStatusNode } f
 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import LabelImportantIcon from '@mui/icons-material/LabelImportant';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
@@ -148,9 +147,15 @@ function Node(props) {
       if(sensors.length > 0) { 
         setStatusProviderSensor(true);
         dispatch(setProviderSensors(sensors));
+      }else {
+        setStatusProviderSensor(false);
+        dispatch(setProviderSensors(sensors));
       }
       if(devices.length > 0) { 
         setStatusProviderDevice(true);
+        dispatch(setProviderDevices(devices));
+      }else {
+        setStatusProviderDevice(false);
         dispatch(setProviderDevices(devices));
       }
       setLoading(false);
@@ -383,12 +388,12 @@ function Node(props) {
           </List>
         </div>
       </MaterialDefaultModal>
-      <Status name={`node ${props['node-id']}`} status={statusNode} />
+      <Status name={`node ${props['node-id'].split('').map((char, index, chars) => (index < chars.length / 2) ? '*' : char).join('')}`} status={statusNode} />
       <h5 className="flex items-center my-5">
         <LocalOfferIcon className="mr-2.5"/>
         Thông số cảm biến
       </h5>
-      <div className="grid md:grid-cols-3	lg:grid-cols-4 xl:grid-cols-5 gap-2">
+      <div className="grid sx:grid-cols-2 sy:grid-cols-3 2md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
       {
         loading
           ? 
@@ -429,7 +434,7 @@ function Node(props) {
         <LocalOfferIcon className="mr-2.5"/>
         Điều khiển thiết bị
       </h5>
-      <div className="grid md:grid-cols-3	lg:grid-cols-4 xl:grid-cols-5 gap-2">
+      <div className="grid sx:grid-cols-2 sy:grid-cols-3 2md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
         {
           loading
           ? 

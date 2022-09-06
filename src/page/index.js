@@ -50,6 +50,8 @@ const payloadLandingPage = {
       },
     ],
   },
+  copyright: 'miru',
+  version: '0.0.1',
 };
 
 function HomePage() {
@@ -68,21 +70,10 @@ function HomePage() {
           {/* Menu list */}
           <div className="flex space-x-6 max-sm:hidden">
             <div className="text-sky-500 cursor-pointer hover:text-sky-400">
-              Tổng quan
-            </div>
-            <div className="text-sky-500 cursor-pointer hover:text-sky-400">
               Sản phẩm
             </div>
             <div className="text-sky-500 cursor-pointer hover:text-sky-400">
               Về chúng tôi
-            </div>
-            <div
-              onClick={() => {
-                navigate("/dashboard/general");
-              }}
-              className="text-sky-500 cursor-pointer hover:text-sky-400"
-            >
-              Dashboard
             </div>
             <div
               onClick={() => {
@@ -106,12 +97,20 @@ function HomePage() {
           </div>
         </div>
         {/* Introduce moblie */}
-        <div className="hidden max-sm:block grid grid-cols-2 my-16 mt-6">
-          <div className="col-span-full">
+        <div className="hidden max-sm:block grid grid-cols-2 ">
+          <div className="col-span-full my-10">
             <h3 className="text-center">{payloadLandingPage.intro}</h3>
             <h5 className="text-gray-500 mt-5 text-sm text-center">
               {payloadLandingPage.decription}
             </h5>
+            <button
+              onClick={() => {
+                navigate("/sign/register");
+              }}
+              className="text-white bg-blue-500 p-3 rounded-full mt-5 text-md"
+            >
+              Đăng ký trải nghiệm ngay
+            </button>
           </div>
           <Divider sx={{ marginY: "1.5rem" }} light={true}>
             CÓ GÌ HOT
@@ -142,15 +141,15 @@ function HomePage() {
             ))}
           </ImageList>
           {/* surport realtime */}
-          <h5 className="text-center mb-6">
+          <h5 className="text-center my-6">
             {payloadLandingPage.realtime.title}
           </h5>
-          <div className="w-screen my-14 -mx-4 bg-green-400">
+          <div className="w-screen my-14 -mx-4 bg-green-400 pb-8">
             <IconWave className={"waves -translate-y-full"} />
             <div className="flex whitespace-nowrap">
               {payloadLandingPage.realtime.items.map((item) => {
                 return (
-                  <div className="w-1/3">
+                  <div className="w-1/3" key={item.title}>
                     <img
                       className="w-4/6 aspect-square object-cover m-auto block"
                       src={item.img}
@@ -162,21 +161,14 @@ function HomePage() {
                 );
               })}
             </div>
-            <IconWave
-              className={"waves translate-y-full rotate-180 relative bottom-2"}
-            />
           </div>
-          <button
-            onClick={() => {
-              navigate("/sign/register");
-            }}
-            className="text-white bg-blue-500 p-3 rounded-full mt-5 text-md"
-          >
-            Đăng ký trải nghiệm
-          </button>
+          <div className="w-full font-black text-lg pb-4">
+            <p className="text-center">©Copyrigth by { payloadLandingPage.copyright }</p>
+            <p className="text-center">Phiên bản hiện tại { payloadLandingPage.version }</p>
+          </div>
           {/* <div className="bg-hero-pattern bg-contain bg-no-repeat bg-top h-80"></div> */}
         </div>
-        {/* Introduce moblie desktop */}
+        {/* Introduce desktop */}
         <div className="hidden min-md:grid grid-cols-2 my-16">
           <div className="mr-5">
             <h3 className="">{payloadLandingPage.intro}</h3>
