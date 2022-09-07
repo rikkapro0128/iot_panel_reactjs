@@ -17,7 +17,9 @@ import MenuPopover from '@/components/popover';
 import { MaterialDefaultModal } from "@/components/modal";
 import { AvatarRipple } from '@/components/avatar';
 import GalleryAvatar from '@/components/gallery/avatar.js';
+import UploadFile from '@/components/upload';
 
+import Divider from '@mui/material/Divider';
 import PersonIcon from '@mui/icons-material/Person';
 import PasswordIcon from '@mui/icons-material/Password';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -190,9 +192,12 @@ function Dashboard() {
 
   return (
     <>
+      {/* modal change avatar */}
       <MaterialDefaultModal open={ modalAvatar } handleClose={ () => { setModalAvatar(false) } }>
         <h3 className="text-center pb-6 -mt-3">Hãy chọn avatar của bạn đi!</h3>
         <GalleryAvatar size={80} srcImages={avatarListDefault} />
+        <Divider sx={{ margin: 2, fontSize: '1rem' }}>Bạn cũng có thể</Divider>
+        <UploadFile />
       </MaterialDefaultModal>
       {/* modal change password */}
       <MaterialDefaultModal open={ modalChangePass } handleClose={ () => { setModalChangePass(false) } }>
@@ -209,21 +214,25 @@ function Dashboard() {
           <Button onClick={ handleChangePassword } sx={{ marginTop: 0.5, position: 'relative', left: '100%', transform: 'translateX(-100%)' }} variant="contained">Đổi mật khẩu</Button>
         </Box>
       </MaterialDefaultModal>
+      {/* modal info user */}
       <MaterialDefaultModal open={toggleModalUser} handleClose={() => { setToggleModalUser(false) }}>
         {
           user
             && 
-          <div className='flex justify-start'>
-            <div className="mr-5 flex flex-col items-center">
-              <AvatarRipple size={80} src={ user?.avatar ? user.avatar : `${process.env.REACT_APP_SERVER_API_HOST}/static/avatar/${avatarListDefault[1]}.svg` }/>
-              <ButtonRS onClick={() => { setModalAvatar(true) }} className="mt-2.5" size="sm" appearance="primary">Đổi ảnh</ButtonRS>
-            </div>
-            <div className="miru--info">
-              <Steps vertical small>
-                <Steps.Item status={'finish'} title="ID tài khoản" description={user?._id || 'Chưa có id' } />
-                <Steps.Item status={'finish'} title="Tên tài khoản" description={ user?.name || 'Chưa có tên' } />
-                <Steps.Item status={'finish'} title="Email" description={ user?.email || 'Chưa có email' } />
-              </Steps>
+          <div>
+            <h5 className="text-center -mt-3 pb-4">Thông tin tài khoản</h5>
+            <div className='flex justify-start'>
+              <div className="mr-5 flex flex-col items-center">
+                <AvatarRipple size={80} src={ user?.avatar ? user.avatar : `${process.env.REACT_APP_SERVER_API_HOST}/static/avatar/${avatarListDefault[1]}.svg` }/>
+                <ButtonRS onClick={() => { setModalAvatar(true) }} className="mt-2.5" size="sm" appearance="primary">Đổi ảnh</ButtonRS>
+              </div>
+              <div className="miru--info">
+                <Steps vertical small>
+                  <Steps.Item status={'finish'} title="ID tài khoản" description={user?._id || 'Chưa có id' } />
+                  <Steps.Item status={'finish'} title="Tên tài khoản" description={ user?.name || 'Chưa có tên' } />
+                  <Steps.Item status={'finish'} title="Email" description={ user?.email || 'Chưa có email' } />
+                </Steps>
+              </div>
             </div>
           </div>
         }
