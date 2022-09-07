@@ -1,9 +1,9 @@
 import { cacheImage } from "@/utils";
 import Avatar from "@mui/material/Avatar";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 
-export default function GalleryAvatar({ srcImages = [], size = 100 }) {
+ function GalleryAvatar({ srcImages = [], size = 100 }) {
   const [stateList, setStateList] = useState(() => srcImages.map(() => false));
 
   useEffect(() => {
@@ -38,3 +38,5 @@ export default function GalleryAvatar({ srcImages = [], size = 100 }) {
     </div>
   );
 }
+
+export default memo(GalleryAvatar);

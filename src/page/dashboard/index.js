@@ -223,7 +223,7 @@ function Dashboard() {
             <h5 className="text-center -mt-3 pb-4">Thông tin tài khoản</h5>
             <div className='flex justify-start'>
               <div className="mr-5 flex flex-col items-center">
-                <AvatarRipple size={80} src={ user?.avatar ? user.avatar : `${process.env.REACT_APP_SERVER_API_HOST}/static/avatar/${avatarListDefault[1]}.svg` }/>
+                <AvatarRipple size={80} src={ user?.avatar?.name ? `${process.env.REACT_APP_SERVER_API_HOST}/static/avatar/${user.avatar.name}.svg` : `${process.env.REACT_APP_SERVER_API_HOST}/static/avatar/${avatarListDefault[1]}.svg` }/>
                 <ButtonRS onClick={() => { setModalAvatar(true) }} className="mt-2.5" size="sm" appearance="primary">Đổi ảnh</ButtonRS>
               </div>
               <div className="miru--info">
@@ -264,7 +264,7 @@ function Dashboard() {
                 dataDropDown={dataDropDown}
                 handleSelect={handleSelectMenu}
               >
-                <AvatarRipple size={35} src={ user?.avatar ? user.avatar : `${process.env.REACT_APP_SERVER_API_HOST}/static/avatar/${avatarListDefault[1]}.svg` }/>
+                <AvatarRipple size={35} src={ user?.avatar?.name ? `${process.env.REACT_APP_SERVER_API_HOST}/static/avatar/${user.avatar.name}.svg` : `${process.env.REACT_APP_SERVER_API_HOST}/static/avatar/${avatarListDefault[1]}.svg` }/>
               </MenuPopover>
             </div>
           </div>

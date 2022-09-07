@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 
 function Hidden({ payload }) {
   const [toggle, setToggle] = useState(false);
+  
   return (
     <div
       onClick={() => {
@@ -20,4 +21,4 @@ function Hidden({ payload }) {
   );
 }
 
-export default Hidden;
+export default memo(Hidden);

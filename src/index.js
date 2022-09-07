@@ -50,6 +50,9 @@ const theme = createTheme({
           input: {
             color: '#ccc',
             textAlign: 'center'
+          },
+          textarea: {
+            color: '#ccc',
           }
         }
       }
@@ -102,6 +105,14 @@ const theme = createTheme({
           '&:after': {
             borderTopColor: '#5c5c5c'
           },
+        }
+      }
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          // text
+          color: '#fff',
         }
       }
     }
