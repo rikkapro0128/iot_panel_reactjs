@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { Loader, Steps, Avatar, Badge, Button as ButtonRS } from "rsuite";
+import { Loader, Steps, Badge, Button as ButtonRS } from "rsuite";
 import { useDispatch, useSelector } from "react-redux";
+
 import Cookies from 'universal-cookie';
 
 import { setInfoUser } from "@/store/userSlice";
@@ -11,7 +12,8 @@ import { setNodes } from "@/store/nodeSlice";
 import { Logo } from "@/components/logo";
 import { Node } from "@/components/node";
 import General from '@/components/general';
-import { ModalInputNode, ModalDynamic } from "@/components/modal";
+import { ModalInputNode } from "@/components/modal";
+import DialogMui from "@/components/dialog";
 import { Toast } from '@/instance/toast.js';
 import MenuPopover from '@/components/popover';
 import { MaterialDefaultModal } from "@/components/modal";
@@ -92,6 +94,7 @@ const cookies = new Cookies();
 function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [dialogLogout, setDialogLogout] = useState(false);
   const [modalChangePass, setModalChangePass] = useState(false);
   const [modalAvatar, setModalAvatar] = useState(false);
   const [password, setPassword] = useState(initPasswordModal);
@@ -118,6 +121,13 @@ function Dashboard() {
     });
   }
 
+  function hanldeLogout() {
+    cookies.remove('accessToken', { path: '/' });
+    cookies.remove('refreshToken', { path: '/' });
+    Toast({ type: 'success', message: 'Đăng xuất thành công!' });
+    navigate('/');
+  }
+
   function handleSelectMenu({ eventKey, actions }) {
     actions.close();
     if(eventKey === 'info') {
@@ -125,10 +135,8 @@ function Dashboard() {
       getInfoUser();
       setToggleModalUser(true);
     }else if(eventKey === 'logout') {
-      cookies.remove('accessToken', { path: '/' });
-      cookies.remove('refreshToken', { path: '/' });
-      Toast({ type: 'success', message: 'Đăng xuát thành công!' });
-      navigate('/');
+      // hanlde logout
+      setDialogLogout(true);
     }else if(eventKey === 'change-password') {
       setModalChangePass(true);
     }else {
@@ -192,6 +200,8 @@ function Dashboard() {
 
   return (
     <>
+      {/* dialog remove node */}
+      <DialogMui open={ dialogLogout } title={'Xác nhận đăng xuất'} message={'Bạn có chắc muốn đăng xuất khỏi tài khoản?'} handleClose={() => { setDialogLogout(false) }} handleAccept={ () => { hanldeLogout() } } />
       {/* modal change avatar */}
       <MaterialDefaultModal open={ modalAvatar } handleClose={ () => { setModalAvatar(false) } }>
         <h3 className="text-center pb-6 -mt-3">Hãy chọn avatar của bạn đi!</h3>
@@ -250,7 +260,7 @@ function Dashboard() {
           content="Loading..."
         />
       ) : (
-        <div className="lg:max-w-7xl mx-auto px-4 mt-4 ">
+        <div className="lg:max-w-7xl mx-auto px-4 mt-4">
           <div className="flex justify-between mb-10">
             <Logo disableNavigate={true} />
             <div className="grid grid-cols-2 gap-x-6 items-center">

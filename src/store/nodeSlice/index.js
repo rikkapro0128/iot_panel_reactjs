@@ -20,6 +20,7 @@ export const nodesSlice = createSlice({
       state.value.push(action.payload);
     },
     removeNode: (state, action) => {
+      console.log(action.payload);
       state.value = state.value.filter(
         (node) => node._id !== action.payload.id
       );

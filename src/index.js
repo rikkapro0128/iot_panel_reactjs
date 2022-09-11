@@ -115,6 +115,13 @@ const theme = createTheme({
           color: '#fff',
         }
       }
+    },
+    MuiDialogContentText: {
+      styleOverrides: {
+        root: {
+          color: '#fff'
+        }
+      }
     }
   },
 });
