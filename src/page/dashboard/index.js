@@ -201,7 +201,7 @@ function Dashboard() {
   return (
     <>
       {/* dialog remove node */}
-      <DialogMui open={ dialogLogout } title={'Xác nhận đăng xuất'} message={'Bạn có chắc muốn đăng xuất khỏi tài khoản?'} handleClose={() => { setDialogLogout(false) }} handleAccept={ () => { hanldeLogout() } } />
+      <DialogMui open={ dialogLogout } title={'Xác nhận đăng xuất'} message={'Bạn có chắc muốn đăng xuất khỏi tài khoản?'} handleClose={() => { setDialogLogout(false) }} handleAccept={ () => { hanldeLogout(); setDialogLogout(false); } } />
       {/* modal change avatar */}
       <MaterialDefaultModal open={ modalAvatar } handleClose={ () => { setModalAvatar(false) } }>
         <h3 className="text-center pb-6 -mt-3">Hãy chọn avatar của bạn đi!</h3>

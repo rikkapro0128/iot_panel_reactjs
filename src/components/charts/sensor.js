@@ -38,11 +38,7 @@ const optionsChartLine = {
   }
 };
 
-const specialTypeModel = {
-  "DHT21-humidity": (value) => value.map((data) => data.value.humidity),
-  "DHT21-temperature": (value) => value.map((data) => data.value.temperature),
-  none: (value) => value.map((data) => data.value),
-};
+const parserPayload = (payload) => payload.map(sensor => sensor.value)
 
 function ChartSensor({
   options = optionsChartLine,
@@ -50,8 +46,6 @@ function ChartSensor({
   label,
   borderColor = "rgb(0, 203, 255)",
   backgroundColor = "rgba(0, 203, 255, 0.5)",
-  width = 600,
-  height = 400,
 }) {
   const [dataChart, setDataChart] = useState(undefined);
 
@@ -62,10 +56,7 @@ function ChartSensor({
         datasets: [
           {
             label,
-            data:
-              sensor.model in specialTypeModel
-                ? specialTypeModel[sensor.model](sensor.payload)
-                : specialTypeModel["none"](sensor.payload),
+            data: sensor?.payload ? parserPayload(sensor.payload) : [],
             borderColor,
             backgroundColor,
           },
@@ -89,9 +80,7 @@ function ChartSensor({
     <h6>Cảm biến {label} chưa thu thập giá trị nào!</h6>
   ) : (
     <Line
-      width={width}
-      height={height}
-      className="animate-[load-smooth_200ms_ease-in-out_alternate]"
+      className="animate-[load-smooth_200ms_ease-in-out_alternate] absolute top-0 left-0 right-0 bottom-0"
       options={options}
       data={dataChart}
     />

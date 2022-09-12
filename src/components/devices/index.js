@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect, memo } from 'react';
 import { CircleSlider } from 'react-circle-slider';
 import 'slider-color-picker';
 import Tooltip from '@mui/material/Tooltip';
@@ -47,6 +47,14 @@ export function ButtonPush(props) {
       props.btnClick({ model: props.model, idDevice: props.idDevice, pins: [{ status: 'OFF', val: props.val, gpio: props.gpio }] });
     }
   }, [click])
+
+  useEffect(() => {
+    if(props.status === 'ON') {
+      setState(buttonShadow.on);
+    }else {
+      setState(buttonShadow.off);
+    }
+  }, [props.status])
 
   return (
     <div className='bg-[#292d33] rounded p-2.5 animate-[load-smooth_200ms_ease-in-out_alternate]'>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Loader } from "rsuite";
-import { setProviderSensors, setProviderDevices, updateSensor, setStatusNode } from "@/store/nodeSlice";
+import { setProviderSensors, setProviderDevices, updateSensor, updateDevice, setStatusNode } from "@/store/nodeSlice";
 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -135,6 +135,7 @@ function Node(props) {
 
   // console.log(payloadChartSensor)
   // console.log(devices)
+  // console.log(sensors)
   // console.log(statusProviderSensor, statusProviderDevice)
   useEffect(() => {
     window.document.title = 'Miru | Node Page';
@@ -169,6 +170,8 @@ function Node(props) {
       dispatch(updateSensor(responseSocket.payload));
     }else if(responseSocket?.type === '$status_node' && responseSocket?.id === props['node-id']) {
       dispatch(setStatusNode(responseSocket.status));
+    }else if(responseSocket?.type === '$response_devices') {
+      dispatch(updateDevice(responseSocket.payload))
     }
   }, [responseSocket]);
 
@@ -233,6 +236,7 @@ function Node(props) {
     const params = `?timeline=${optionsQueryChart.timeline}&sort=${optionsQueryChart.sort}&range=${transformRange(optionsQueryChart.range, optionsQueryChart.type)}`
     const url = getPayloadChartSensor_PATH(pickSensor.id, params);
     api.get(url).then(response => {
+      // console.log(response.data.payload);
       setPayloadChartSensor({ payload: response.data.payload, ...pickSensor });
     })
   }
@@ -286,7 +290,7 @@ function Node(props) {
     <div>
       <MaterialDefaultModal open={openModalChartsSensor} handleClose={() => { setOpenModalChartsSensor(false); setPickSensor(undefined); }}>
         <>
-          <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
             <FormControl sx={{ m: 1, minWidth: 140 }} size="small">
               <InputLabel id="demo-select-small">Hiển thị</InputLabel>
               <Select
@@ -343,8 +347,8 @@ function Node(props) {
             </FormControl>
             <Button sx={{ m: 1 }} className="whitespace-nowrap" onClick={requestChartSensor} variant="contained">Áp dụng</Button>
           </Box>
-          <div className=" w-full text-center mt-8">
-            <ChartSensor sensor={payloadChartSensor} label={payloadChartSensor?.name} />
+          <div className="w-full relative pt-[100%] text-center mt-8">
+            <ChartSensor className={'w-full'} sensor={payloadChartSensor} label={payloadChartSensor?.name} />
           </div>
         </>
       </MaterialDefaultModal>
@@ -393,7 +397,7 @@ function Node(props) {
         <LocalOfferIcon className="mr-2.5"/>
         Thông số cảm biến
       </h5>
-      <div className="grid sx:grid-cols-2 sy:grid-cols-3 2md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
+      <div className="grid ss:grid-cols-2 sm:grid-cols-3 2md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
       {
         loading
           ? 
@@ -434,7 +438,7 @@ function Node(props) {
         <LocalOfferIcon className="mr-2.5"/>
         Điều khiển thiết bị
       </h5>
-      <div className="grid sx:grid-cols-2 sy:grid-cols-3 2md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
+      <div className="grid ss:grid-cols-2 sm:grid-cols-3 2md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
         {
           loading
           ? 

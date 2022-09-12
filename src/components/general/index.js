@@ -185,9 +185,9 @@ function General({ nodeList }) {
   return (
     <>
       {/* dialog remove node */}
-      <DialogMui open={ dialogRemoveNode } title={'Xác nhận xoá'} message={'Bạn có chắc xoá node này?'} handleClose={() => { setDialogRemoveNode(false) }} handleAccept={ () => { hanldeRemoveNode({ id: chooseNode }) } } />
+      <DialogMui open={ dialogRemoveNode } title={'Xác nhận xoá'} message={'Bạn có chắc xoá node này?'} handleClose={() => { setDialogRemoveNode(false) }} handleAccept={ () => { hanldeRemoveNode({ id: chooseNode }); setDialogRemoveNode(false); } } />
       {/* dialog update node */}
-      <DialogMui open={ dialogUpdateNode } title={'Xác nhận cập nhật'} message={'Bạn có chắc cập nhật node này?'} handleClose={() => { setDialogUpdateNode(false) }} handleAccept={ () => { handleUpdateInfoNode() } } />
+      <DialogMui open={ dialogUpdateNode } title={'Xác nhận cập nhật'} message={'Bạn có chắc cập nhật node này?'} handleClose={() => { setDialogUpdateNode(false) }} handleAccept={ () => { handleUpdateInfoNode(); setDialogUpdateNode(false) } } />
       {/* modal information node */}
       <MaterialDefaultModal
         open={modalNode}

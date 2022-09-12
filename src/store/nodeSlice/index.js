@@ -27,50 +27,30 @@ export const nodesSlice = createSlice({
     },
     updateNode: (state, action) => {
       state.value.some((node, index) => {
-        if(node._id === action.payload.id) {
+        if (node._id === action.payload.id) {
           state.value[index] = action.payload.value;
           return true;
-        }else {
+        } else {
           return false;
         }
-      })
+      });
     },
     setProviderSensors: (state, action) => {
       state.provider.sensors = action.payload.reduce(
         (oldPayload, newPayload) => {
-          if (newPayload.sensor.typeModel === "DHT21") {
-            return [
-              ...oldPayload,
-              {
-                name: "Nhiệt độ",
-                id: newPayload.sensor._id,
-                model: newPayload.sensor.typeModel + "-temperature",
-                value: newPayload?.sampleSensor?.value.temperature,
-                unit: "°C",
-              },
-              {
-                name: "Độ ẩm",
-                id: newPayload.sensor._id,
-                model: newPayload.sensor.typeModel + "-humidity",
-                value: newPayload?.sampleSensor?.value.humidity,
-                unit: "%",
-              },
-            ];
-          } else {
-            return [
-              ...oldPayload,
-              {
-                name: newPayload.sensor.name,
-                id: newPayload.sensor._id,
-                model: newPayload.sensor.typeModel,
-                value: newPayload?.sampleSensor?.value || "unset",
-                unit:
-                  (newPayload.sensor.unit === "Percent"
-                    ? undefined
-                    : newPayload.sensor.unit) || "%",
-              },
-            ];
-          }
+          return [
+            ...oldPayload,
+            {
+              name: newPayload.sensor.name,
+              id: newPayload.sensor._id,
+              model: newPayload.sensor.typeModel,
+              value: newPayload?.sampleSensor?.value || "unset",
+              unit:
+                (newPayload.sensor.unit === "Percent"
+                  ? undefined
+                  : newPayload.sensor.unit) || "%",
+            },
+          ];
         },
         []
       );
@@ -96,23 +76,21 @@ export const nodesSlice = createSlice({
       );
     },
     updateSensor: (state, action) => {
-      if (action.payload.model === "DHT21") {
-        state.provider.sensors = state.provider.sensors.map((sensor) => {
-          if (sensor.model.includes("DHT21-temperature")) {
-            return {
-              ...sensor,
-              value: action.payload.value.temperature,
-            };
-          } else if (sensor.model.includes("DHT21-humidity")) {
-            return {
-              ...sensor,
-              value: action.payload.value.humidity,
-            };
-          } else {
-            return sensor;
-          }
+      state.provider.sensors = state.provider.sensors.map((sensor) => {
+        return (action.payload.model === sensor.model) ? {
+          ...sensor,
+          ...action.payload,
+          id: action.payload.idSensor,
+        } : sensor;
+      });
+    },
+    updateDevice: (state, action) => {
+      const typeModel = action.payload.model;
+      action.payload.pins.forEach(payload => {
+        state.provider.devices = state.provider.devices.map(device => {
+          return (payload.gpio === device.gpio && typeModel === device.model) ? { ...device, ...payload } : device;
         });
-      }
+      });
     },
     setStatusNode: (state, action) => {
       state.status = action.payload;
@@ -127,6 +105,7 @@ export const {
   setProviderSensors,
   setProviderDevices,
   updateSensor,
+  updateDevice,
   setStatusNode,
   updateNode,
 } = nodesSlice.actions;
