@@ -20,19 +20,23 @@ export const nodesSlice = createSlice({
       state.value.push(action.payload);
     },
     removeNode: (state, action) => {
-      console.log(action.payload);
       state.value = state.value.filter(
-        (node) => node._id !== action.payload.id
+        (node) => !action.payload.ids.includes(node._id)
       );
     },
     updateNode: (state, action) => {
-      state.value.some((node, index) => {
-        if (node._id === action.payload.id) {
-          state.value[index] = action.payload.value;
-          return true;
-        } else {
-          return false;
+      const count = action.payload.nodes.length;
+      let temp = 0;
+      state.value = state.value.map((node, index) => {
+        if(temp < count) {
+          for(const nodeUpdated of action.payload.nodes) {
+            if(node._id === nodeUpdated._id) {
+              temp++;
+              return nodeUpdated;
+            }
+          }
         }
+        return node;
       });
     },
     setProviderSensors: (state, action) => {

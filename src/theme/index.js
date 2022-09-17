@@ -1,7 +1,14 @@
-import { CustomProvider } from 'rsuite';
+// import { ThemeProvider, createTheme } from '@mui/material/styles';
+// import CssBaseline from '@mui/material/CssBaseline';
 
-function Theme(props) {
-  return <CustomProvider theme="dark">{props.children}</CustomProvider>;
-}
+// function Theme(props) {
+//   return 
+//   (
+//     <ThemeProvider theme={darkTheme}>
+//       {/* <CssBaseline />  */}
+//       {props.children}
+//     </ThemeProvider>
+//   )
+// }
 
-export default Theme;
+// export default Theme;

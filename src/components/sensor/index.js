@@ -10,8 +10,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import InfoIcon from '@mui/icons-material/Info';
 
-
-import MenuPopover from '@/components/popover';
+import { MuiMenu } from "@/components/popover";
 
 const colorStart = {
   h: 124,
@@ -43,11 +42,12 @@ const getPercent = (value, ladder) => {
 
 export function SensorDefault(props) {
   const [color, setColor] = useState(colorStart);
+  const [anchorMenu, setAnchorMenu] = useState(null);
   const [percentProgress, setPercentProgress] = useState(0);
 
-  function handleSelectMenu({ eventKey, actions }) {
+  function handleSelectMenu({ eventKey }) {
     // hanlde selection is here
-    props.handleOptions({ eventKey, actions });
+    props.handleOptions({ eventKey });
   }
 
   useEffect(() => {
@@ -59,6 +59,8 @@ export function SensorDefault(props) {
 
   return (
     <div className="bg-[#292d33] rounded p-2.5 animate-[load-smooth_200ms_ease-in-out_alternate]">
+      {/* menu on mobile */}
+      <MuiMenu id='account' anchorEl={anchorMenu} payload={payloadDropDown} onEventKey={ handleSelectMenu } onClose={() => { setAnchorMenu(null) }} onClick={() => { setAnchorMenu(null) }} />
       <div className='flex justify-between items-center'>
         <img className='block w-10 h-auto mr-2' src={props.model in iconSensorByModel ? `${process.env.REACT_APP_SERVER_API_HOST}/static/common/${iconSensorByModel[props.model]}.svg` : ''} alt={props.model} />
         <Tooltip title={ props.title } placement="top">
@@ -66,19 +68,11 @@ export function SensorDefault(props) {
             { props.title }
           </p>
         </Tooltip>
-        <MenuPopover
-          id={'controll-id-user-dropdown'}
-          target={'user-dropdown'}
-          placement={'bottomEnd'}
-          dataDropDown={payloadDropDown}
-          handleSelect={handleSelectMenu}
-        >
-          <Tooltip title="Chi tiết" placement="bottom-end">
-            <IconButton aria-label="view-more" size="small">
-              <MoreVertIcon className='text-white	' color='inherit' />
-            </IconButton>
-          </Tooltip>
-        </MenuPopover>
+        <Tooltip title="Chi tiết" placement="bottom-end">
+          <IconButton onClick={ (event) => { setAnchorMenu(event.currentTarget) } } aria-label="view-more" size="small">
+            <MoreVertIcon className='text-white	' color='inherit' />
+          </IconButton>
+        </Tooltip>
       </div>
       <div className='m-auto' style={{ width: `${props.size}px`, height: `${props.size}px` }}>
         <ProgressBar

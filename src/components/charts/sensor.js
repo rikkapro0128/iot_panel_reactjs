@@ -73,13 +73,14 @@ function ChartSensor({
   return dataChart === undefined ? (
     <Loader
       size="md"
-      className="col-span-full text-center"
+      className="col-span-full text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
       content="Loading..."
     />
   ) : dataChart.length === 0 ? (
     <h6>Cảm biến {label} chưa thu thập giá trị nào!</h6>
   ) : (
     <Line
+      height={'300%'}
       className="animate-[load-smooth_200ms_ease-in-out_alternate] absolute top-0 left-0 right-0 bottom-0"
       options={options}
       data={dataChart}

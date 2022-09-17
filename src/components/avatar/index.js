@@ -34,7 +34,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-function AvatarRipple({ src, size = 50 }) {
+function AvatarRipple({ src, size = 50, onClick }) {
 
   const [img, setImg] = useState(undefined);
 
@@ -46,6 +46,7 @@ function AvatarRipple({ src, size = 50 }) {
 
   return (
     <StyledBadge
+      onClick={ onClick }
       overlap="circular"
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       variant="dot"

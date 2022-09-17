@@ -1,27 +1,42 @@
 import toast from "react-hot-toast";
 
-export function Toast({ type = undefined, message = 'không có thông báo!', option = {
-  success: {
-    duration: 5000,
-    icon: '🎉',
-  },
-  error: {
-    duration: 2000,
-    icon: '🐧',
-  },
-  icon: '🦊',
+const baseOptions = {
   position: "bottom-right",
   style: {
     borderRadius: "10px",
     background: "#333",
     color: "#fff",
   },
-}, promise, payloadMessage }) {
+}
+
+const blankOptions = {
+  duration: 5000,
+  icon: '🦊',
+}
+
+const successOptions = {
+  duration: 5000,
+  icon: '🎉',
+}
+
+const errorOptions = {
+  duration: 3000,
+  icon: '🐧',
+}
+
+const promiseOptions = {
+  ...baseOptions,
+  success: successOptions,
+  error: errorOptions,
+}
+
+export function Toast({ type = undefined, message = 'không có thông báo!', promise, payloadMessage }) {
   if(type === 'promise') {
-    toast[type](promise, payloadMessage, option);
+    toast[type](promise, payloadMessage, promiseOptions);
   }else if(type === undefined) {
-    toast(message, option);
+    toast(message, { ...baseOptions, ...blankOptions });
   }else {
-    toast[type](message, option);
+    const optionsType = type === 'success' ? successOptions : errorOptions;
+    toast[type](message, { ...baseOptions, ...optionsType });
   }
 }

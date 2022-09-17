@@ -250,7 +250,7 @@ function Node(props) {
     }
   }
 
-  function handleOptionsBySensor({ eventKey, actions }, sensor) {
+  function handleOptionsBySensor({ eventKey }, sensor) {
     // console.log(eventKey, sensor);
     if(eventKey === 'detail-sensor') {
       setPayloadModal(fakeDataDescSensor[sensor.model]);
@@ -266,7 +266,6 @@ function Node(props) {
     }else {
       Toast({ message: 'Chức năng hiện chưa có!' });
     }
-    actions.close();
   }
 
   function handleChangeChartTimeline(event) {

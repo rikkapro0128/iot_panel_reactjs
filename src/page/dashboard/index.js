@@ -15,21 +15,25 @@ import General from '@/components/general';
 import { ModalInputNode } from "@/components/modal";
 import DialogMui from "@/components/dialog";
 import { Toast } from '@/instance/toast.js';
-import MenuPopover from '@/components/popover';
+import MenuPopover, { MuiMenu } from '@/components/popover';
 import { MaterialDefaultModal } from "@/components/modal";
 import { AvatarRipple } from '@/components/avatar';
 import GalleryAvatar from '@/components/gallery/avatar.js';
 import UploadFile from '@/components/upload';
 
+import { styled } from '@mui/material/styles';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
 import Divider from '@mui/material/Divider';
 import PersonIcon from '@mui/icons-material/Person';
 import PasswordIcon from '@mui/icons-material/Password';
 import LogoutIcon from '@mui/icons-material/Logout';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import WidgetsIcon from '@mui/icons-material/Widgets';
 import MemoryIcon from '@mui/icons-material/Memory';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ViewAgendaIcon from '@mui/icons-material/ViewAgenda';
 import Box from '@mui/material/Box';
+import SpeedDial from '@mui/material/SpeedDial';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
@@ -55,6 +59,18 @@ const dataDropDown = [
     Icon: <LogoutIcon />,
   },
 ]
+
+const StyledSpeedDial = styled(SpeedDial)(({ theme }) => ({
+  position: 'absolute',
+  '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+  },
+  '&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight': {
+    top: theme.spacing(2),
+    left: theme.spacing(2),
+  },
+}));
 
 const initPasswordModal = {
   oldPassword: {
@@ -89,12 +105,19 @@ const avatarListDefault = [
   'avatar_15',
 ];
 
+const actions = [
+  { icon: <ViewAgendaIcon />, name: 'Tổng quan' },
+  { icon: <MemoryIcon />, name: 'Xem node' },
+];
+
 const cookies = new Cookies();
 
 function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [anchorMenu, setAnchorMenu] = useState(null);
   const [dialogLogout, setDialogLogout] = useState(false);
+  const [dial, setDial] = useState(false);
   const [modalChangePass, setModalChangePass] = useState(false);
   const [modalAvatar, setModalAvatar] = useState(false);
   const [password, setPassword] = useState(initPasswordModal);
@@ -128,8 +151,7 @@ function Dashboard() {
     navigate('/');
   }
 
-  function handleSelectMenu({ eventKey, actions }) {
-    actions.close();
+  function handleSelectMenu({ eventKey }) {
     if(eventKey === 'info') {
       // call API get user info
       getInfoUser();
@@ -142,6 +164,14 @@ function Dashboard() {
     }else {
       Toast({ message: 'Chức năng hiện chưa có!' });
 
+    }
+  }
+
+  function handleDial(event, reason) {
+    if(reason === 'toggle') {
+      setDial(dial => !dial);
+    }else if(reason === 'blur') {
+      setDial(false);
     }
   }
 
@@ -200,6 +230,46 @@ function Dashboard() {
 
   return (
     <>
+      {/* menu on mobile */}
+      <MuiMenu id='account' anchorEl={anchorMenu} payload={dataDropDown} onEventKey={ handleSelectMenu } onClose={() => { setAnchorMenu(null) }} onClick={() => { setAnchorMenu(null) }} />
+      {/* menu on mobile */}
+      <div className="2md:hidden">
+        <Box sx={{ position: 'fixed', right: '1rem', bottom: '1rem' }}>
+          <StyledSpeedDial
+            sx={{
+              '& > .MuiSpeedDial-fab': {
+                backgroundColor: '#2cb67d',
+                '&:hover': {
+                  backgroundColor: '#28a06e',
+                }
+              }
+            }}
+            ariaLabel="SpeedDial playground example"
+            icon={<WidgetsIcon />}
+            direction={'up'}
+            open={dial}
+            onOpen={handleDial}
+            onClose={handleDial}
+          >
+            {actions.map((action) => (
+              <SpeedDialAction
+                sx={{
+                  backgroundColor: '#010101',
+                  color: '#fff',
+                  '&:hover': {
+                    backgroundColor: '#72757e',
+                  },
+                  width: '50px',
+                  height: '50px',
+                }}
+                key={action.name}
+                icon={action.icon}
+                tooltipTitle={action.name}
+              />
+            ))}
+          </StyledSpeedDial>
+        </Box>
+      </div>
       {/* dialog remove node */}
       <DialogMui open={ dialogLogout } title={'Xác nhận đăng xuất'} message={'Bạn có chắc muốn đăng xuất khỏi tài khoản?'} handleClose={() => { setDialogLogout(false) }} handleAccept={ () => { hanldeLogout(); setDialogLogout(false); } } />
       {/* modal change avatar */}
@@ -267,15 +337,7 @@ function Dashboard() {
               <Badge onClick={() => { Toast({ message: 'Chức năng hiện chưa có!' }); }} className="cursor-pointer flex justify-center items-center" content="99+" color="blue">
                 <NotificationsIcon />
               </Badge>
-              <MenuPopover
-                id={'controll-id-user-dropdown'}
-                target={'user-dropdown'}
-                placement={'bottomEnd'}
-                dataDropDown={dataDropDown}
-                handleSelect={handleSelectMenu}
-              >
-                <AvatarRipple size={35} src={ user?.avatar?.name ? `${process.env.REACT_APP_SERVER_API_HOST}/static/avatar/${user.avatar.name}.svg` : `${process.env.REACT_APP_SERVER_API_HOST}/static/avatar/${avatarListDefault[1]}.svg` }/>
-              </MenuPopover>
+              <AvatarRipple onClick={ (event) => { setAnchorMenu(event.currentTarget) } } size={35} src={ user?.avatar?.name ? `${process.env.REACT_APP_SERVER_API_HOST}/static/avatar/${user.avatar.name}.svg` : `${process.env.REACT_APP_SERVER_API_HOST}/static/avatar/${avatarListDefault[1]}.svg` }/>
             </div>
           </div>
           <div className="grid grid-cols-12">

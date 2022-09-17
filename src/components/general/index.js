@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 import api from "@/api/index.js";
 import { Toast } from "@/instance/toast.js";
@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeNode, updateNode } from "@/store/nodeSlice";
 import DialogMui from "@/components/dialog";
 
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SettingsIcon from "@mui/icons-material/Settings";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InfoIcon from "@mui/icons-material/Info";
@@ -18,13 +17,20 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Grid from "@mui/material/Unstable_Grid2";
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
 
+import TableNodes from "@/components/table/nodes.js";
 import { MaterialDefaultModal } from "@/components/modal";
-import MenuPopover from "@/components/popover";
+import { MuiMenu } from "@/components/popover";
 import Hidden from "@/components/hidden";
+import { Typography } from "@mui/material";
 
 const removeNodeByID_PATH = "api/node/remove";
 const updateNodeByID_PATH = "api/node/update";
+
+const ModelDefault = ["esp8266", "esp32", "arduino-wifi"];
 
 const dataDropDown = [
   {
@@ -44,25 +50,36 @@ const dataDropDown = [
   },
 ];
 
-const ModelDefault = ["esp8266", "esp32", "arduino-wifi"];
-
 function General({ nodeList }) {
   const dispatch = useDispatch();
+  const [anchorMenu, setAnchorMenu] = useState(null);
   const [checked, setChecked] = useState([]);
   const [isAll, setIsAll] = useState(false);
+  const [selectNodeID, setSelectNodeID] = useState(undefined);
+  const [typeUpdate, setTypeUpdate] = useState("single");
   const [dialogRemoveNode, setDialogRemoveNode] = useState(false);
   const [dialogUpdateNode, setDialogUpdateNode] = useState(false);
   const [modalNode, setModalNode] = useState(false);
-  const [optionsNode, setOptionsNode] = useState(() => ({
-    model: ModelDefault[0],
-  }));
-  const [chooseNode, setChooseNode] = useState("");
+  const [valueUpdateNode, setValueUpdateNode] = useState({});
+  const [chooseNode, setChooseNode] = useState([]);
   const nodeInfo = useSelector((state) =>
-    state.nodes.value.find((device) => device._id === chooseNode)
+    state.nodes.value.find((device) => device._id === selectNodeID)
   );
   const [statusCheckAll, setStatusCheckAll] = useState(false);
   const [nodeID, setNodeID] = useState(() => nodeList.map((node) => node._id));
   const eleRefs = useRef({});
+  const handleTableChangeNodes = useCallback(({ type, ids }) => {
+    setChooseNode(ids);
+    if (type === "remove") {
+      setDialogRemoveNode(true);
+    } else if (type === "update") {
+      setTypeUpdate("muti");
+      setModalNode(true);
+    }
+    console.log({ type, ids });
+  }, []);
+
+  // console.log(valueUpdateNode);
 
   useEffect(() => {
     if (isAll) {
@@ -88,7 +105,9 @@ function General({ nodeList }) {
   }, [checked]);
 
   useEffect(() => {
-    setOptionsNode(nodeInfo);
+    if (chooseNode.length > 0) {
+      setSelectNodeID(chooseNode[0]);
+    }
   }, [chooseNode]);
 
   function handleCheckAll(ele) {
@@ -121,73 +140,100 @@ function General({ nodeList }) {
     }
   }
 
-  async function hanldeRemoveNode({ id }) {
-    const res = await api.delete(`${removeNodeByID_PATH}/${id}`);
-    const { idNode, message } = res.data;
-    if (idNode && message === "remove node successfull!") {
-      dispatch(removeNode({ id: idNode }));
+  async function hanldeRemoveNode({ ids }) {
+    const res = await api.delete(removeNodeByID_PATH, {
+      data: { nodeIDs: ids },
+    });
+    const { nodeIDs, message } = res.data;
+    if (nodeIDs && message === "remove node successfull!") {
+      const count = nodeIDs.reduce(
+        (hold, node) => (node.statusRemove === "done" ? ++hold : hold),
+        0
+      );
+      dispatch(removeNode({ ids: nodeIDs.map((node) => node.id) }));
       Toast({
         type: "success",
-        message: "Node đã được xoá thành công!",
+        message: `${count} node đã được xoá thành công!`,
       });
     }
   }
 
-  function handleSelectMenu({ eventKey, actions, target }) {
+  function handleSelectMenu({ eventKey, target }) {
     if (eventKey === "delete") {
       // handle remove node
-      setChooseNode(target.id);
       setDialogRemoveNode(true);
     } else if (eventKey === "about") {
-      setChooseNode(target.id);
       setModalNode(true);
     }
-    actions.close();
   }
 
-  /* do some thing when model is many, not now */
-  // function handleChangeOptionsNode() {
-  // }
-
   function handleUpdateInfoNode() {
-    const { name, model, desc } = optionsNode;
-    api
-      .patch(`${updateNodeByID_PATH}/${chooseNode}`, {
-        name,
-        typeModal: model,
-        desc,
-      })
-      .then((res) => {
-        const { message } = res.data;
-        if (message === "update node successfull!") {
-          dispatch(updateNode({ id: chooseNode, value: optionsNode }));
-          Toast({
-            type: "success",
-            message: "Node đã được cập nhật thông tin!",
-          });
-          setModalNode(false);
-        }
-      })
-      .catch((error) => {
-        if (
-          error.response.data.message === "You not permission update this node!"
-        ) {
-          Toast({
-            type: "error",
-            message: "Bạn không có quyền cập nhật node này!",
-          });
-        } else {
+    if (Object.keys(valueUpdateNode).length > 0) {
+      api
+        .patch(updateNodeByID_PATH, {
+          nodesUpdate: valueUpdateNode,
+        })
+        .then((res) => {
+          const { message, resultUpdateNodes } = res.data;
+          if (message === "update node done!") {
+            const nodeUpdated = resultUpdateNodes
+              .map((temp) => (temp.status === "done" ? temp.node : null))
+              .filter((value) => value !== null);
+            dispatch(updateNode({ nodes: nodeUpdated }));
+            Toast({
+              type: "success",
+              message: "Node đã được cập nhật thông tin!",
+            });
+            setModalNode(false);
+          }
+        })
+        .catch((error) => {
           Toast({ type: "error", message: "Opp, Không thể cập nhật node!" });
-        }
-      });
+        });
+    }
   }
 
   return (
     <>
+      {/* menu on mobile */}
+      <MuiMenu
+        id="account"
+        anchorEl={anchorMenu}
+        payload={dataDropDown}
+        onEventKey={handleSelectMenu}
+        onClose={() => {
+          setAnchorMenu(null);
+        }}
+        onClick={() => {
+          setAnchorMenu(null);
+        }}
+      />
       {/* dialog remove node */}
-      <DialogMui open={ dialogRemoveNode } title={'Xác nhận xoá'} message={'Bạn có chắc xoá node này?'} handleClose={() => { setDialogRemoveNode(false) }} handleAccept={ () => { hanldeRemoveNode({ id: chooseNode }); setDialogRemoveNode(false); } } />
+      <DialogMui
+        open={dialogRemoveNode}
+        title={"Xác nhận xoá"}
+        message={`Bạn có chắc xoá ${chooseNode?.length} node đã chọn?`}
+        handleClose={() => {
+          setDialogRemoveNode(false);
+        }}
+        handleAccept={() => {
+          hanldeRemoveNode({ ids: chooseNode });
+          setDialogRemoveNode(false);
+        }}
+      />
       {/* dialog update node */}
-      <DialogMui open={ dialogUpdateNode } title={'Xác nhận cập nhật'} message={'Bạn có chắc cập nhật node này?'} handleClose={() => { setDialogUpdateNode(false) }} handleAccept={ () => { handleUpdateInfoNode(); setDialogUpdateNode(false) } } />
+      <DialogMui
+        open={dialogUpdateNode}
+        title={"Xác nhận cập nhật"}
+        message={"Bạn có chắc cập nhật node này?"}
+        handleClose={() => {
+          setDialogUpdateNode(false);
+        }}
+        handleAccept={() => {
+          handleUpdateInfoNode();
+          setDialogUpdateNode(false);
+        }}
+      />
       {/* modal information node */}
       <MaterialDefaultModal
         open={modalNode}
@@ -195,29 +241,57 @@ function General({ nodeList }) {
           setModalNode(false);
         }}
       >
-        <h5>
-          Thông tin node:{" "}
-          {chooseNode
-            .split("")
-            .map((char, index, chars) =>
-              index > chars.length / 2 ? char : "*"
-            )
-            .join("")}
-        </h5>
+        <div>
+          {typeUpdate === "single" ? (
+            <>
+              <h5>Thông tin node</h5>
+              <p>{chooseNode?.[0]}</p>
+            </>
+          ) : (
+            <>
+              <h5 className="mb-5">Cập nhật các node:</h5>
+              <FormControl size="small" fullWidth>
+                <InputLabel id="model-select-label">Chọn node</InputLabel>
+                <Select
+                  id="model-select"
+                  value={selectNodeID || chooseNode?.[0]}
+                  label="Chọn node"
+                  onChange={(event) => {
+                    setSelectNodeID(event.target.value);
+                  }}
+                >
+                  {chooseNode.map((node) => {
+                    return (
+                      <MenuItem key={node} value={node}>
+                        {node}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </>
+          )}
+        </div>
         <div className="lg:min-w-[500px]">
           <Grid sx={{ marginY: "0.5rem" }} container spacing={2}>
             <Grid xs={7}>
               <TextField
                 onChange={(event) => {
-                  setOptionsNode((state) => ({
+                  setValueUpdateNode((state) => ({
                     ...state,
-                    name: event.target.value,
+                    [selectNodeID]: state?.[selectNodeID]
+                      ? { ...state[selectNodeID], name: event.target.value }
+                      : { name: event.target.value },
                   }));
                 }}
                 fullWidth
                 size="small"
                 id={`name-node-${chooseNode}`}
-                value={optionsNode?.name || ""}
+                value={
+                  valueUpdateNode?.[selectNodeID]?.name ||
+                  nodeInfo?.name ||
+                  "{ Không có tên }"
+                }
                 label="Tên node"
                 variant="outlined"
               />
@@ -227,11 +301,11 @@ function General({ nodeList }) {
                 <InputLabel id="model-select-label">Model</InputLabel>
                 <Select
                   id="model-select"
-                  value={optionsNode?.model || ModelDefault[0]}
+                  value={valueUpdateNode?.model || ModelDefault[0]}
                   label="Model"
-                  // onChange={handleChangeOptionsNode}
                   disabled={true}
                 >
+                  {/* setSelectNodeID(chooseNode[0]) */}
                   {ModelDefault.map((model) => {
                     return (
                       <MenuItem key={model} value={model}>
@@ -250,16 +324,16 @@ function General({ nodeList }) {
                 multiline
                 rows={4}
                 value={
-                  optionsNode?.desc
-                    ? optionsNode.desc === "no-desc"
-                      ? "{ Không có mô tả nào! }"
-                      : optionsNode.desc
-                    : ""
+                  valueUpdateNode?.[selectNodeID]?.desc ||
+                  nodeInfo?.desc ||
+                  "{ Không có mô tả }"
                 }
                 onChange={(event) => {
-                  setOptionsNode((state) => ({
+                  setValueUpdateNode((state) => ({
                     ...state,
-                    desc: event.target.value,
+                    [selectNodeID]: state?.[selectNodeID]
+                      ? { ...state[selectNodeID], desc: event.target.value }
+                      : { desc: event.target.value },
                   }));
                 }}
               />
@@ -267,7 +341,7 @@ function General({ nodeList }) {
           </Grid>
           <Button
             onClick={() => {
-              setDialogUpdateNode(true)
+              setDialogUpdateNode(true);
             }}
             sx={{
               marginTop: 0.5,
@@ -282,103 +356,14 @@ function General({ nodeList }) {
         </div>
       </MaterialDefaultModal>
       <div className="w-full bg-[#1A1D27] shadow-lg rounded-md border border-gray-200 animate-[load-smooth_200ms_ease-in-out_alternate]">
-        <header className="px-5 pt-4 border-b border-gray-100">
-          <div className="font-semibold text-white text-lg">Quản lí Node</div>
-        </header>
+        {/* NEW TABLE BY MUI */}
 
-        <div className="overflow-x-auto p-3">
-          <table className="table-auto w-full overflow-hidden rounded-md">
-            <thead className="text-xs font-semibold uppercase text-gray-400 bg-[#1F2937]">
-              <tr>
-                <th className="p-2 text-left">
-                  <input
-                    ref={(ele) => {
-                      eleRefs.current["all"] = ele;
-                    }}
-                    type={"checkbox"}
-                    onChange={handleCheckAll}
-                  />
-                </th>
-                <th className="p-2">
-                  <div className="font-semibold text-center">ID Node</div>
-                </th>
-                <th className="p-2">
-                  <div className="font-semibold  text-center">Tên Node</div>
-                </th>
-                <th className="p-2">
-                  <div className="font-semibold  text-center">Mô tả</div>
-                </th>
-                <th className="p-2">
-                  <div className="font-semibold  text-center">Loại Modal</div>
-                </th>
-                <th className="p-2">
-                  <div className="font-semibold text-center">chỉnh sửa</div>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-sm divide-y divide-gray-100">
-              {nodeList.length > 0 ? (
-                nodeList.map((node, index) => {
-                  return (
-                    <tr
-                      className={`p-2 ${
-                        index % 2 === 0 ? `bg-[#384152]` : `bg-[#1F2937]`
-                      }`}
-                      key={node._id}
-                    >
-                      <td className="p-2">
-                        <input
-                          ref={(ele) => {
-                            eleRefs.current[node._id] = ele;
-                          }}
-                          type={"checkbox"}
-                          value={node._id}
-                          onChange={handleCheckSingle}
-                        />
-                      </td>
-                      <td className="p-2">
-                        <Hidden payload={node?._id || ""} />
-                      </td>
-                      <td className="p-2">
-                        <div className="font-medium text-white ">
-                          {node.name}
-                        </div>
-                      </td>
-                      <td className="p-2">
-                        <div className="font-medium text-white max-w-[330px] overflow-hidden text-center overflow-ellipsis whitespace-nowrap">
-                          {node.desc === 'no-desc' ? 'Chưa có mô tả nào' : node.desc }
-                        </div>
-                      </td>
-                      <td className="p-2">
-                        <div className="text-center text-xs bg-[#A6F4D0] p-1 rounded-full text-[#225945]">
-                          {node.typeModal}
-                        </div>
-                      </td>
-                      <td className="p-2">
-                        <div className="flex justify-center relative">
-                          <MenuPopover
-                            id={node._id}
-                            target={{ id: node._id }}
-                            dataDropDown={dataDropDown}
-                            handleSelect={handleSelectMenu}
-                          >
-                            <MoreVertIcon className="cursor-pointer" />
-                          </MenuPopover>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td colSpan="6" className="text-center p-4 bg-[#384152]">
-                    Bạn chưa đăng ký node nào cả!
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        <TableNodes
+          payload={nodeList}
+          onTableChangeNodes={handleTableChangeNodes}
+        />
+
+        {/* NEW TABLE BY MUI */}
       </div>
     </>
   );

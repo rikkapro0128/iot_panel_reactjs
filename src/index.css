@@ -15,36 +15,6 @@ img {
   height: 100%;
 }
 
-input[type="checkbox"] {
-  display: grid;
-  place-content: center;
-  width: 18px;
-  height: 18px;
-  -webkit-appearance: none;
-  appearance: none;
-  position: relative;
-  border: 2px solid #dbdbdb;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-input[type="checkbox"]::before {
-  position: absolute;
-  content: "";
-  width: 70%;
-  height: 70%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  border-radius: 2px;
-  transition: 120ms transform ease-in-out;
-  box-shadow: inset 1em 1em #dbdbdb;
-}
-
-input[type="checkbox"]:checked::before {
-  transform: translate(-50%, -50%) scale(1);
-}
-
 .rs-steps-vertical .rs-steps-item {
   padding-bottom: 0;
 }
