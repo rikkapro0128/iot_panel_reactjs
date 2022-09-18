@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import api from "@/api/index.js";
 import { Toast } from "@/instance/toast.js";
@@ -17,15 +17,10 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Grid from "@mui/material/Unstable_Grid2";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
 
 import TableNodes from "@/components/table/nodes.js";
 import { MaterialDefaultModal } from "@/components/modal";
 import { MuiMenu } from "@/components/popover";
-import Hidden from "@/components/hidden";
-import { Typography } from "@mui/material";
 
 const removeNodeByID_PATH = "api/node/remove";
 const updateNodeByID_PATH = "api/node/update";
@@ -53,8 +48,6 @@ const dataDropDown = [
 function General({ nodeList }) {
   const dispatch = useDispatch();
   const [anchorMenu, setAnchorMenu] = useState(null);
-  const [checked, setChecked] = useState([]);
-  const [isAll, setIsAll] = useState(false);
   const [selectNodeID, setSelectNodeID] = useState(undefined);
   const [typeUpdate, setTypeUpdate] = useState("single");
   const [dialogRemoveNode, setDialogRemoveNode] = useState(false);
@@ -65,9 +58,6 @@ function General({ nodeList }) {
   const nodeInfo = useSelector((state) =>
     state.nodes.value.find((device) => device._id === selectNodeID)
   );
-  const [statusCheckAll, setStatusCheckAll] = useState(false);
-  const [nodeID, setNodeID] = useState(() => nodeList.map((node) => node._id));
-  const eleRefs = useRef({});
   const handleTableChangeNodes = useCallback(({ type, ids }) => {
     setChooseNode(ids);
     if (type === "remove") {
@@ -79,66 +69,11 @@ function General({ nodeList }) {
     console.log({ type, ids });
   }, []);
 
-  // console.log(valueUpdateNode);
-
-  useEffect(() => {
-    if (isAll) {
-      for (const checkbox in eleRefs.current) {
-        eleRefs.current[checkbox].checked = statusCheckAll;
-      }
-    }
-  }, [statusCheckAll]);
-
-  useEffect(() => {
-    if (checked.length === nodeID.length) {
-      if (!statusCheckAll) {
-        setStatusCheckAll(true);
-        setIsAll(true);
-      }
-    } else {
-      if (statusCheckAll) {
-        setStatusCheckAll(false);
-        setIsAll(false);
-        eleRefs.current["all"].checked = false;
-      }
-    }
-  }, [checked]);
-
   useEffect(() => {
     if (chooseNode.length > 0) {
       setSelectNodeID(chooseNode[0]);
     }
   }, [chooseNode]);
-
-  function handleCheckAll(ele) {
-    if (ele.target.checked) {
-      setChecked(nodeID);
-      setStatusCheckAll(true);
-    } else {
-      setChecked([]);
-      setStatusCheckAll(false);
-    }
-    if (!isAll) {
-      setIsAll(true);
-    }
-  }
-
-  function handleCheckSingle(ele) {
-    const type = ele.target.checked;
-    const value = ele.target.value;
-    if (type) {
-      setChecked([...checked, value]);
-    } else {
-      if (checked.includes(value)) {
-        setChecked(() => {
-          return checked.filter((target) => target !== value);
-        });
-      }
-    }
-    if (isAll) {
-      setIsAll(false);
-    }
-  }
 
   async function hanldeRemoveNode({ ids }) {
     const res = await api.delete(removeNodeByID_PATH, {
@@ -155,6 +90,7 @@ function General({ nodeList }) {
         type: "success",
         message: `${count} node đã được xoá thành công!`,
       });
+      setChooseNode([]);
     }
   }
 
@@ -185,6 +121,7 @@ function General({ nodeList }) {
               message: "Node đã được cập nhật thông tin!",
             });
             setModalNode(false);
+            setChooseNode([]);
           }
         })
         .catch((error) => {

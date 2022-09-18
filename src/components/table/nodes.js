@@ -15,10 +15,20 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { alpha } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
+
+import MiruTooltip from '@/components/tooltip';
+
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import "dayjs/locale/vi";
+dayjs.extend(localizedFormat)
+dayjs.locale("vi");
+dayjs.extend(relativeTime);
 
 const headCells = [
   {
@@ -64,14 +74,30 @@ const headCells = [
     label: "Model",
   },
   {
-    id: "createAt",
+    id: "createdAt",
     numeric: false,
     disablePadding: false,
-    label: "Ngày tạo",
+    label: "Thời gian tạo",
+  },
+  {
+    id: "updatedAt",
+    numeric: false,
+    disablePadding: false,
+    label: "Lần cập nhật cuối",
   },
 ];
 
-function createData(name, id, desc, status, ip, mac, model, createAt) {
+function createData(
+  name,
+  id,
+  desc,
+  status,
+  ip,
+  mac,
+  model,
+  createdAt,
+  updatedAt
+) {
   return {
     name,
     id,
@@ -80,7 +106,8 @@ function createData(name, id, desc, status, ip, mac, model, createAt) {
     ip,
     mac,
     model,
-    createAt,
+    createdAt,
+    updatedAt,
   };
 }
 
@@ -134,10 +161,12 @@ function TableNodes({ payload, onTableChangeNodes }) {
           node?.ipRemote,
           node?.macAddress,
           node?.typeModal,
-          node?.createdAt
+          node?.createdAt,
+          node?.updatedAt
         )
       );
     });
+    setSelected([]);
   }, [payload]);
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
@@ -196,11 +225,13 @@ function TableNodes({ payload, onTableChangeNodes }) {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Box onKeyDown={(event) => {
-      if(event.key === 'Escape') {
-        setSelected([]);
-      }
-    }}>
+    <Box
+      onKeyDown={(event) => {
+        if (event.key === "Escape") {
+          setSelected([]);
+        }
+      }}
+    >
       {/* Toolbar TABLE */}
       <Toolbar
         sx={{
@@ -236,14 +267,22 @@ function TableNodes({ payload, onTableChangeNodes }) {
         )}
 
         {selected.length > 0 ? (
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Tooltip title="Chỉnh sửa">
-              <IconButton onClick={() => { onTableChangeNodes({ type: 'update', ids: selected }) }}>
+              <IconButton
+                onClick={() => {
+                  onTableChangeNodes({ type: "update", ids: selected });
+                }}
+              >
                 <EditIcon />
               </IconButton>
             </Tooltip>
             <Tooltip title="Xoá">
-              <IconButton onClick={() => { onTableChangeNodes({ type: 'remove', ids: selected }) }}>
+              <IconButton
+                onClick={() => {
+                  onTableChangeNodes({ type: "remove", ids: selected });
+                }}
+              >
                 <DeleteIcon />
               </IconButton>
             </Tooltip>
@@ -325,7 +364,7 @@ function TableNodes({ payload, onTableChangeNodes }) {
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.name}
+                    key={row.id}
                     selected={isItemSelected}
                   >
                     <TableCell padding="checkbox">
@@ -372,9 +411,16 @@ function TableNodes({ payload, onTableChangeNodes }) {
                     <TableCell sx={{ whiteSpace: "nowrap" }} align="left">
                       {row.model}
                     </TableCell>
-                    <TableCell sx={{ whiteSpace: "nowrap" }} align="left">
-                      {row.createAt}
-                    </TableCell>
+                    <MiruTooltip placement={'left'} disableInteractive title={dayjs(row.createdAt).format('llll')}>
+                      <TableCell sx={{ whiteSpace: "nowrap" }} align="left">
+                        {dayjs(row.createdAt).fromNow()}
+                      </TableCell>
+                    </MiruTooltip>
+                    <MiruTooltip placement={'left'} disableInteractive title={dayjs(row.updatedAt).format('llll')}>
+                      <TableCell sx={{ whiteSpace: "nowrap" }} align="left">
+                        {dayjs(row.updatedAt).fromNow()}
+                      </TableCell>
+                    </MiruTooltip>
                   </TableRow>
                 );
               })}
@@ -393,7 +439,7 @@ function TableNodes({ payload, onTableChangeNodes }) {
 
       {/* Pagination TABLE */}
       <TablePagination
-        labelRowsPerPage={'Phân trang'}
+        labelRowsPerPage={"Phân trang"}
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={rows.length}

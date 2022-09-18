@@ -2,12 +2,13 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { Loader, Steps, Badge, Button as ButtonRS } from "rsuite";
+import { Loader, Steps, Button as ButtonRS } from "rsuite";
 import { useDispatch, useSelector } from "react-redux";
 
 import Cookies from 'universal-cookie';
 
 import { setInfoUser } from "@/store/userSlice";
+import { addNotify, setSkipNext } from "@/store/notifySlice";
 import { setNodes } from "@/store/nodeSlice";
 import { Logo } from "@/components/logo";
 import { Node } from "@/components/node";
@@ -15,7 +16,8 @@ import General from '@/components/general';
 import { ModalInputNode } from "@/components/modal";
 import DialogMui from "@/components/dialog";
 import { Toast } from '@/instance/toast.js';
-import MenuPopover, { MuiMenu } from '@/components/popover';
+import { MuiMenu } from '@/components/popover';
+import Notify from '@/components/notify';
 import { MaterialDefaultModal } from "@/components/modal";
 import { AvatarRipple } from '@/components/avatar';
 import GalleryAvatar from '@/components/gallery/avatar.js';
@@ -36,11 +38,14 @@ import Box from '@mui/material/Box';
 import SpeedDial from '@mui/material/SpeedDial';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Badge from '@mui/material/Badge';
 
 import api from "@/api/index.js";
 
 const getListNode_PATH = "api/node/list";
 const getInfoUser_PATH = "api/user/info";
+const getNotifyUser_PATH = "api/user/notify";
 const postChangePassword_PATH = "api/user/change-password";
 const dataDropDown = [
   {
@@ -116,6 +121,7 @@ function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [anchorMenu, setAnchorMenu] = useState(null);
+  const [anchorNotify, setAnchorNotify] = useState(null);
   const [dialogLogout, setDialogLogout] = useState(false);
   const [dial, setDial] = useState(false);
   const [modalChangePass, setModalChangePass] = useState(false);
@@ -125,9 +131,23 @@ function Dashboard() {
   const [parentPath, setParentPath] = useState("/dashboard");
   const [statusNode, setStatusNode] = useState("disconnected");
   const nodeList = useSelector((state) => state.nodes.value);
+  const notify = useSelector((state) => state.notify);
   const user = useSelector((state) => state.user.info);
   const [toggle, setToggle] = useState(false);
   const [toggleModalUser, setToggleModalUser] = useState(false);
+
+  useEffect(() => {
+    if(!notify.length) {
+      api.get(getNotifyUser_PATH)
+      .then(res => {
+        dispatch(addNotify(res.data.notifys))
+        dispatch(setSkipNext(res.data.skipNext))
+      })
+      .catch(err => {
+        Toast({ type: 'error', message: 'Opp, Có lỗi xảy ra khi tìm thêm thông báo!' });
+      })
+    }
+  }, [anchorNotify])
 
   useEffect(() => {
     window.document.title = 'Miru | Dashboard Page';
@@ -163,7 +183,6 @@ function Dashboard() {
       setModalChangePass(true);
     }else {
       Toast({ message: 'Chức năng hiện chưa có!' });
-
     }
   }
 
@@ -230,7 +249,9 @@ function Dashboard() {
 
   return (
     <>
-      {/* menu on mobile */}
+      {/* notify */}
+      <Notify anchorEl={anchorNotify} notifys={notify.value} onClose={ () => { setAnchorNotify(null) } } onEventKey={ ({ eventKey }) => { setAnchorNotify(null); } } />
+      {/* menu */}
       <MuiMenu id='account' anchorEl={anchorMenu} payload={dataDropDown} onEventKey={ handleSelectMenu } onClose={() => { setAnchorMenu(null) }} onClick={() => { setAnchorMenu(null) }} />
       {/* menu on mobile */}
       <div className="2md:hidden">
@@ -333,10 +354,12 @@ function Dashboard() {
         <div className="lg:max-w-7xl mx-auto px-4 mt-4">
           <div className="flex justify-between mb-10">
             <Logo disableNavigate={true} />
-            <div className="grid grid-cols-2 gap-x-6 items-center">
-              <Badge onClick={() => { Toast({ message: 'Chức năng hiện chưa có!' }); }} className="cursor-pointer flex justify-center items-center" content="99+" color="blue">
-                <NotificationsIcon />
-              </Badge>
+            <div className="grid grid-cols-2 gap-x-6 items-baseline">
+              <IconButton onClick={ (event) => { setAnchorNotify(event.currentTarget) } }>
+                <Badge badgeContent={notify.length} sx={{ '.MuiBadge-badge': (theme) => ({ backgroundColor: theme.palette.primary.dark }) }}>
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
               <AvatarRipple onClick={ (event) => { setAnchorMenu(event.currentTarget) } } size={35} src={ user?.avatar?.name ? `${process.env.REACT_APP_SERVER_API_HOST}/static/avatar/${user.avatar.name}.svg` : `${process.env.REACT_APP_SERVER_API_HOST}/static/avatar/${avatarListDefault[1]}.svg` }/>
             </div>
           </div>
