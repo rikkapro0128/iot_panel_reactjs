@@ -28,7 +28,7 @@ const theme = createTheme({
       contrastText: '#fff',
     },
     secondary: {
-      light: '#ff7961',
+      light: '#2cb67d',
       main: '#f44336',
       dark: '#72757e',
       contrastText: '#000',
@@ -53,7 +53,7 @@ root.render(
         '::-webkit-scrollbar-thumb': {
           border: '2px solid transparent',
           backgroundClip: 'content-box',
-          backgroundColor: theme.palette.primary.light,
+          backgroundColor: theme.palette.secondary.light,
         },
       }} />
       <App />

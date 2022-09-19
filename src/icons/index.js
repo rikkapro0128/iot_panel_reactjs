@@ -130,23 +130,6 @@ const IconCheck = (props) => (
   </svg>
 )
 
-const IconBell = (props) => (
-  <svg
-    width={24}
-    height={24}
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M14 3v.29c2.892.86 5 3.539 5 6.71v7h1v2H4v-2h1v-7a7.003 7.003 0 0 1 5-6.71V3a2 2 0 1 1 4 0ZM7 17h10v-7a5 5 0 0 0-10 0v7Zm7 4v-1h-4v1a2 2 0 1 0 4 0Z"
-      fill="currentColor"
-    />
-  </svg>
-)
-
 const IconNode = (props) => (
   <svg
     width={24}
@@ -429,13 +412,66 @@ const IconUploadImage = (props) => (
   </svg>
 )
 
+const IconBell = (props) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="32"
+      height="32"
+      viewBox="0 0 520 520"
+      {...props}
+    >
+      <g>
+        <path
+          fill="#33383f"
+          d="M260 125c-16.542 0-30-13.458-30-30s13.458-30 30-30 30 13.458 30 30-13.458 30-30 30zm0-50c-11.028 0-20 8.972-20 20s8.972 20 20 20 20-8.972 20-20-8.972-20-20-20z"
+        ></path>
+        <path
+          fill="#ffd83d"
+          d="M370 375V220c0-60.762-49.254-110-110-110-60.75 0-110 49.25-110 110v155c-11.041 0-20 8.961-20 20 0 11.05 8.95 20 20 20h220c11.039 0 20-8.961 20-20 0-11.05-8.95-20-20-20z"
+        ></path>
+        <path
+          fill="#73bcff"
+          d="M415 75c13.81 0 25 11.19 25 25s-11.19 25-25 25-25-11.19-25-25 11.19-25 25-25z"
+        ></path>
+        <circle cx="80" cy="340" r="30" fill="#73bcff"></circle>
+        <path
+          fill="#fd6814"
+          d="M285 415v10c0 13.81-11.19 25-25 25s-25-11.19-25-25v-10z"
+        ></path>
+        <path
+          fill="#ffb700"
+          d="M370 375c11.05 0 20 8.95 20 20 0 11.039-8.961 20-20 20H150c-11.05 0-20-8.95-20-20 0-11.039 8.959-20 20-20zM150 245h220v35H150z"
+        ></path>
+        <g fill="#ff3e3b">
+          <circle cx="462.5" cy="412.5" r="7.5"></circle>
+          <circle cx="437.5" cy="207.5" r="7.5"></circle>
+          <circle cx="367.5" cy="62.5" r="7.5"></circle>
+          <circle cx="187.5" cy="462.5" r="7.5"></circle>
+          <circle cx="127.5" cy="57.5" r="7.5"></circle>
+          <circle cx="87.5" cy="422.5" r="7.5"></circle>
+          <circle cx="77.5" cy="172.5" r="7.5"></circle>
+        </g>
+        <path
+          fill="#fff"
+          d="M335 215a5 5 0 01-5-5c0-28.651-30.604-65-65-65a5 5 0 110-10c19.238 0 38.122 8.982 53.172 25.292C331.84 175.103 340 193.686 340 210a5 5 0 01-5 5z"
+        ></path>
+        <path
+          fill="#ffb700"
+          d="M255 310a5 5 0 00-5-5H150v10h100a5 5 0 005-5z"
+        ></path>
+      </g>
+    </svg>
+  );
+}
+
 export {
   IconAdd,
   IconUser,
-  IconBell,
   IconInfo,
   IconUndo,
   IconWave,
+  IconBell,
   IconSign,
   IconNode,
   IconCheck,

@@ -20,15 +20,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { alpha } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
 
+import { useMiruDate } from "@/hooks/useMiruDate";
 import MiruTooltip from '@/components/tooltip';
-
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import localizedFormat from "dayjs/plugin/localizedFormat";
-import "dayjs/locale/vi";
-dayjs.extend(localizedFormat)
-dayjs.locale("vi");
-dayjs.extend(relativeTime);
 
 const headCells = [
   {
@@ -149,6 +142,8 @@ function TableNodes({ payload, onTableChangeNodes }) {
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
   const [rows, setRows] = useState([]);
+  const setDateByFormat = useMiruDate((dayjs) => (date) => dayjs(date).format('llll'));
+  const setDateByFromNow = useMiruDate((dayjs) => (date) => dayjs(date).fromNow());
 
   useEffect(() => {
     setRows(() => {
@@ -211,7 +206,6 @@ function TableNodes({ payload, onTableChangeNodes }) {
   };
 
   const handleSelectAllClick = (event) => {
-    console.log("check all");
     if (event.target.checked) {
       const newSelected = rows.map((n) => n.id);
       setSelected(newSelected);
@@ -397,28 +391,28 @@ function TableNodes({ payload, onTableChangeNodes }) {
                       }}
                       align="left"
                     >
-                      {row.desc}
+                      {(row.desc === 'no-desc' || row.desc === '') ? 'Không có mô tả' : row.desc}
                     </TableCell>
                     <TableCell sx={{ whiteSpace: "nowrap" }} align="left">
                       {row.status}
                     </TableCell>
                     <TableCell sx={{ whiteSpace: "nowrap" }} align="left">
-                      {row.ip}
+                      {row.ip || 'Không tìm thấy'}
                     </TableCell>
                     <TableCell sx={{ whiteSpace: "nowrap" }} align="left">
-                      {row.mac}
+                      {row.mac || 'Không tìm thấy'}
                     </TableCell>
                     <TableCell sx={{ whiteSpace: "nowrap" }} align="left">
                       {row.model}
                     </TableCell>
-                    <MiruTooltip placement={'left'} disableInteractive title={dayjs(row.createdAt).format('llll')}>
+                    <MiruTooltip placement={'left'} disableInteractive title={setDateByFormat(row.createdAt)}>
                       <TableCell sx={{ whiteSpace: "nowrap" }} align="left">
-                        {dayjs(row.createdAt).fromNow()}
+                        {setDateByFromNow(row.createdAt)}
                       </TableCell>
                     </MiruTooltip>
-                    <MiruTooltip placement={'left'} disableInteractive title={dayjs(row.updatedAt).format('llll')}>
+                    <MiruTooltip placement={'left'} disableInteractive title={setDateByFormat(row.updatedAt)}>
                       <TableCell sx={{ whiteSpace: "nowrap" }} align="left">
-                        {dayjs(row.updatedAt).fromNow()}
+                        {setDateByFromNow(row.updatedAt)}
                       </TableCell>
                     </MiruTooltip>
                   </TableRow>
